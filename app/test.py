@@ -14,22 +14,22 @@ from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 
-users = [
-{
-        'id': 1,
-        'name': u'test',
-        'passwd': u'test',
-        'type': u'student'
-    },
-    {
-        'id': 2,
-        'name': u'test2',
-        'passwd': u'test2',
-        'type': u'student'
-    }
-]
+# users = [
+#     {
+#         'id': 1,
+#         'name': u'test',
+#         'password': u'test',
+#         'type': u'student'
+#     },
+#     {
+#         'id': 2,
+#         'name': u'test2',
+#         'password': u'test2',
+#         'type': u'student'
+#     }
+# ]
 
-#initialization
+# initialization
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'watchaaaaaadog'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
@@ -53,22 +53,21 @@ class User(db.Model):
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)
 
-    def generate_auth_token(self, expiration=600):
-        s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dump({'id': self.id})
+    def generate_auth_token(self, expiration = 600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
+        return s.dumps({ 'id': self.id })
 
     @staticmethod
     def verify_auth_token(token):
         s = Serializer(app.config['SECRET_KEY'])
         try:
-            data = s.load(token)
+            data = s.loads(token)
         except SignatureExpired:
             return None  # valid token, but expired
         except BadSignature:
             return None  # invalid token
         user = User.query.get(data['id'])
         return user
-
 
 
 def make_public_user(user):
@@ -84,10 +83,21 @@ def make_public_user(user):
 def not_found(error):
     return make_response(jsonify({'error': 'Not Found'}), 404)
 
+
 @app.errorhandler(400)
 def not_found(error):
     return make_response(jsonify({'error': 'Bad Request'}), 400)
 
+
+# @auth.verify_password
+# def verify_password(username, password):
+#     #user = User.verify_auth_token(username)
+#     # if not user:
+#     user = User.query.filter_by(username=username).first()
+#     if not user or not user.verify_password(password):
+#         return False
+#     g.user = user
+#     return True
 
 @auth.verify_password
 def verify_password(username_or_token, password):
@@ -99,7 +109,6 @@ def verify_password(username_or_token, password):
     g.user = user
     return True
 
-
 # @auth.get_password
 # def get_password(username):
 #     if username == 'ok':
@@ -107,9 +116,9 @@ def verify_password(username_or_token, password):
 #     return None
 
 
-# @auth.error_handler
-# def unauthorized():
-#     return make_response(jsonify({'error': 'Unauthorized access'}), 403)
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify({'error': 'Unauthorized access'}), 401)
 
 
 @app.route('/snail/api/v0.1/users', methods=['GET'])
@@ -120,7 +129,7 @@ def get_users():
 
 
 @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['GET'])
-#@auth.login_required
+@auth.login_required
 def get_user(user_id):
     # user = filter(lambda t: t['id'] == user_id, users)
     user = User.query.get(user_id)
@@ -149,9 +158,8 @@ def create_user():
     db.session.add(user)
     db.session.commit()
     #return jsonify({'username': map(make_public_user, user)}), 201
-    return jsonify({ 'username': user.username }), 201
-          # {'Location': url_for('get_user', id = user.id, _external = True)}
-
+    return jsonify({'username': user.username}), 201
+    # {'Location': url_for('get_user', id = user.id, _external = True)}
 
 
 # @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['PUT'])
@@ -187,14 +195,14 @@ def create_user():
 @app.route('/snail/api/v0.1/token')
 @auth.login_required
 def get_auth_token():
-    token = g.user.generate_auth_token(600)
-    return jsonify({'token': token.decode('ascii'), 'duration': 600})
+    token = g.user.generate_auth_token()
+    return jsonify({'token': token.decode('ascii')})
 
 
 @app.route('/snail/api/v0.1/resource')
 @auth.login_required
 def get_resource():
-    return jsonify({'data': 'Hello, %s!' % g.user.usernane})
+    return jsonify({ 'data': 'Hello, %s!' % g.user.username })
 
 
 if __name__ == '__main__':

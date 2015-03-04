@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9829647-7e9d-4408-9ce1-d061e1dd7dd3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/base.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/config.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/forms.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/login.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/__init__.py" afterPath="$PROJECT_DIR$/app/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/index.html" afterPath="$PROJECT_DIR$/app/templates/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/test.py" afterPath="$PROJECT_DIR$/app/test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="flask.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,8 +28,8 @@
       <file leaf-file-name="test.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48818898" vertical-offset="2373" max-vertical-offset="3135">
-              <caret line="183" column="38" selection-start-line="183" selection-start-column="38" selection-end-line="183" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.57086617" vertical-offset="1080" max-vertical-offset="3255">
+              <caret line="101" column="21" selection-start-line="101" selection-start-column="21" selection-end-line="101" selection-end-column="21" />
               <folding>
                 <element signature="e#20#29#0" expanded="true" />
               </folding>
@@ -527,8 +519,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48818898" vertical-offset="2373" max-vertical-offset="3135">
-          <caret line="183" column="38" selection-start-line="183" selection-start-column="38" selection-end-line="183" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.57086617" vertical-offset="1080" max-vertical-offset="3255">
+          <caret line="101" column="21" selection-start-line="101" selection-start-column="21" selection-end-line="101" selection-end-column="21" />
           <folding>
             <element signature="e#20#29#0" expanded="true" />
           </folding>
