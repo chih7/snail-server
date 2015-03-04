@@ -139,6 +139,7 @@ def get_user(user_id):
 
 
 @app.route('/snail/api/v0.1/users', methods=['POST'])
+@auth.login_required
 def create_user():
     username = request.json.get('username')
     password = request.json.get('password')
