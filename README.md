@@ -6,13 +6,13 @@
 
 使用`Pyhon`、`Flask`框架，实现`RESTful api`服务器端。
 
-|HTTP方法    |URI                                          |动作           |
-| ---------- |:-------------------------------------------:|-------------:| 
-|GET         |http://api.chih.me//snail/api/v0.1/users     |检索所有用户    |
-|GET         |http://api.chih.me//snail/api/v0.1/users/[id]|检索单个用户    |
-|POST        |http://api.chih.me//snail/api/v0.1/users     |创建新用户      |
-|PUT         |http://api.chih.me//snail/api/v0.1/users/[id]|更新用户信息    |
-|DELETE      |http://api.chih.me//snail/api/v0.1/users/[id]|删除用户        |
+HTTP方法    |URI                                          |动作           
+ ---------- |---------------------------------------------|------------- 
+GET         |http://api.chih.me//snail/api/v0.1/users     |检索所有用户
+GET         |http://api.chih.me//snail/api/v0.1/users/[id]|检索单个用户
+POST        |http://api.chih.me//snail/api/v0.1/users     |创建新用户 
+PUT         |http://api.chih.me//snail/api/v0.1/users/[id]|更新用户信息
+DELETE      |http://api.chih.me//snail/api/v0.1/users/[id]|删除用户  
 
 
 ##API调用说明
