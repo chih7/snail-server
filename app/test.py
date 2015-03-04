@@ -208,4 +208,4 @@ def get_resource():
 if __name__ == '__main__':
     if not os.path.exists('db.sqlite'):
         db.create_all()
-    app.run(host='0.0.0.0', port=8001)
+    app.run(host='0.0.0.0', port=80)
