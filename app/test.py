@@ -119,11 +119,11 @@ def verify_password(username_or_token, password):
     return True
 
 
-# @app.route('/snail/api/v0.1/users', methods=['GET'])
-# @auth.login_required
-# def get_users():
-# users = User.query.get()
-#     return jsonify({'users': map(make_public_user, users)})
+@app.route('/snail/api/v0.1/users', methods=['GET'])
+@auth.login_required
+def get_users():
+    users = User.query.all()
+    return jsonify({'users': users})
 
 
 @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['GET'])
@@ -167,7 +167,7 @@ def get_ques(ques_id):
 @app.route('/snail/api/v0.1/ques', methods=['GET'])
 @auth.login_required
 def get_queses():
-    queses = Ques.query.get()
+    queses = Ques.query.all()
     if not queses:
         abort(404)
     return jsonify({'queses': queses})
