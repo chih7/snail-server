@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9829647-7e9d-4408-9ce1-d061e1dd7dd3" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/db.sqlite" afterPath="$PROJECT_DIR$/app/db.sqlite" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/test.py" afterPath="$PROJECT_DIR$/app/test.py" />
     </list>
     <ignored path="flask.iws" />
@@ -28,8 +29,8 @@
       <file leaf-file-name="test.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.63981044" vertical-offset="1575" max-vertical-offset="5085">
-              <caret line="123" column="16" selection-start-line="123" selection-start-column="16" selection-end-line="123" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.8341232" vertical-offset="2648" max-vertical-offset="5670">
+              <caret line="200" column="32" selection-start-line="0" selection-start-column="0" selection-end-line="372" selection-end-column="0" />
               <folding>
                 <element signature="e#44#53#0" expanded="true" />
               </folding>
@@ -126,8 +127,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="332" />
-    <option name="y" value="317" />
+    <option name="x" value="299" />
+    <option name="y" value="254" />
     <option name="width" value="864" />
     <option name="height" value="600" />
   </component>
@@ -406,7 +407,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="332" y="317" width="864" height="600" extended-state="1" />
+    <frame x="299" y="254" width="864" height="600" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -660,8 +661,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63981044" vertical-offset="1575" max-vertical-offset="5085">
-          <caret line="123" column="16" selection-start-line="123" selection-start-column="16" selection-end-line="123" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.8341232" vertical-offset="2648" max-vertical-offset="5670">
+          <caret line="200" column="32" selection-start-line="0" selection-start-column="0" selection-end-line="372" selection-end-column="0" />
           <folding>
             <element signature="e#44#53#0" expanded="true" />
           </folding>

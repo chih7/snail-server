@@ -8,6 +8,7 @@ import bson.objectid
 import bson.errors
 import datetime
 import hashlib
+#import sys
 from flask import Flask
 from flask import jsonify
 from flask import Response
@@ -31,6 +32,10 @@ app.config['SECRET_KEY'] = 'watchaaaaaadog'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
+# text_factory = str
+# reload(sys)
+# sys.setdefaultencoding('utf8')
+
 # extensions
 auth = HTTPBasicAuth()
 db = SQLAlchemy(app)
@@ -41,9 +46,9 @@ mongodb = pymongo.MongoClient('localhost', 27017).pic
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(32), index=True)
-    password_hash = db.Column(db.String(64))
-    type = db.Column(db.String(64))
+    username = db.Column((db.String(64)), index=True)
+    password_hash = db.Column((db.String(64)))
+    type = db.Column((db.String(64)))
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
@@ -71,16 +76,16 @@ class User(db.Model):
 class Ques(db.Model):
     __tablename__ = 'ques'
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(64))
-    title = db.Column(db.String(64))
-    content = db.Column(db.String(2048))
+    type = db.Column((db.String(64)))
+    title = db.Column((db.String(1024)))
+    content = db.Column((db.String(2048)))
 
 
 class Comp(db.Model):
     __tablename__ = 'comp'
     id = db.Column(db.Integer, primary_key=True)
-    comp_type = db.Column(db.String(64))
-    name = db.Column(db.String(64))
+    comp_type = db.Column((db.String(64)))
+    name = db.Column((db.String(64)))
 
 
 def make_public_user(user):
@@ -122,7 +127,19 @@ def verify_password(username_or_token, password):
 @app.route('/snail/api/v0.1/users', methods=['GET'])
 @auth.login_required
 def get_users():
-    users = User.query.all()
+    users_num = User.query.count()
+    users = []
+    if users_num == 0:
+        abort(404)
+    for user_id in range(1, users_num+1):
+        user = User.query.get(user_id)
+
+        user_item = {
+            'id': user.id,
+            'username': user.username,
+            'type': user.type
+        }
+        users.append(user_item)
     return jsonify({'users': users})
 
 
@@ -134,10 +151,11 @@ def get_user(user_id):
     if not user:
         abort(400)
     return jsonify({'id': user.id, 'username': user.username, 'type': user.type})
+    #return jsonify(user)
 
 
 @app.route('/snail/api/v0.1/users', methods=['POST'])
-@auth.login_required
+#@auth.login_required
 def create_user():
     username = request.json.get('username')
     password = request.json.get('password')
@@ -155,7 +173,7 @@ def create_user():
     # {'Location': url_for('get_user', id = user.id, _external = True)}
 
 
-@app.route('/snail/api/v0.1/ques/<int:ques_id>', methods=['GET'])
+@app.route('/snail/api/v0.1/queses/<int:ques_id>', methods=['GET'])
 @auth.login_required
 def get_ques(ques_id):
     ques = Ques.query.get(ques_id)
@@ -164,16 +182,27 @@ def get_ques(ques_id):
     return jsonify({'id': ques.id, 'type': ques.type, 'title': ques.title, 'content': ques.content})
 
 
-@app.route('/snail/api/v0.1/ques', methods=['GET'])
+@app.route('/snail/api/v0.1/queses', methods=['GET'])
 @auth.login_required
 def get_queses():
-    queses = Ques.query.all()
-    if not queses:
+    queses_num = Ques.query.count()
+    queses = []
+    if queses_num == 0:
         abort(404)
+    for ques_id in range(1, queses_num+1):
+        ques = Ques.query.get(ques_id)
+
+        ques_item = {
+            'id': ques.id,
+            'type': ques.type,
+            'title': ques.title,
+            'content': ques.content
+        }
+        queses.append(ques_item)
     return jsonify({'queses': queses})
 
 
-@app.route('/snail/api/v0.1/ques', methods=['POST'])
+@app.route('/snail/api/v0.1/queses', methods=['POST'])
 @auth.login_required
 def create_ques():
     type = request.json.get('type')
@@ -181,8 +210,8 @@ def create_ques():
     content = request.json.get('content')
     if title is None or type is None:
         abort(400)
-    if Ques.query.filter_by(type=type).first() is None:
-        abort(400)
+    if Comp.query.filter_by(comp_type=type).first() is None:
+       abort(400)
     ques = Ques(type=type, title=title, content=content)
     db.session.add(ques)
     db.session.commit()
@@ -201,9 +230,19 @@ def get_comp(comp_id):
 @app.route('/snail/api/v0.1/comps', methods=['GET'])
 @auth.login_required
 def get_comps():
-    comps = Ques.query.get()
-    if not comps:
+    comps_num = Comp.query.count()
+    comps = []
+    if comps_num == 0:
         abort(404)
+    for comp_id in range(1, comps_num+1):
+        comp = Comp.query.get(comp_id)
+
+        comp_item = {
+            'id': comp.id,
+            'type': comp.comp_type,
+            'name': comp.name
+        }
+        comps.append(comp_item)
     return jsonify({'comps': comps})
 
 
