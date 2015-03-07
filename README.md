@@ -6,17 +6,24 @@
 
 使用`Pyhon`、`Flask`框架，实现`RESTful api`服务器端。
 
-HTTP方法    |URI                                          |动作           
- ---------- |---------------------------------------------|------------- 
-GET         |http://api.chih.me/snail/api/v0.1/users     |检索所有用户
-GET         |http://api.chih.me/snail/api/v0.1/users/[id]|检索单个用户
-POST        |http://api.chih.me/snail/api/v0.1/users     |创建新用户 
-PUT         |http://api.chih.me/snail/api/v0.1/users/[id]|更新用户信息
-DELETE      |http://api.chih.me/snail/api/v0.1/users/[id]|删除用户
-GET         |http://api.chih.me/snail/api/v0.1/ok        |登录验证
-GET         |http://api.chih.me/snail/api/v0.1/token     |获取token
-POST        |http://api.chih.me/snail/api/v0.1/upload    |上传图片
-GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]|获取图片
+HTTP方法    |URI                                                  |动作           
+ ---------- |-----------------------------------------------------|------------- 
+GET         |http://api.chih.me/snail/api/v0.1/users              |检索所有用户
+GET         |http://api.chih.me/snail/api/v0.1/users/[id]         |检索单个用户
+POST        |http://api.chih.me/snail/api/v0.1/users              |创建新用户 
+PUT         |http://api.chih.me/snail/api/v0.1/users/[id]         |更新用户信息
+DELETE      |http://api.chih.me/snail/api/v0.1/users/[id]         |删除用户
+GET         |http://api.chih.me/snail/api/v0.1/ok                 |登录验证
+GET         |http://api.chih.me/snail/api/v0.1/token              |获取token
+GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |获取图片
+GET         |http://api.chih.me/snail/api/v0.1/queses             |检索所有问题
+GET         |http://api.chih.me/snail/api/v0.1/queses/[id]        |检索单个问题
+POST        |http://api.chih.me/snail/api/v0.1/queses             |上传问题
+GET         |http://api.chih.me/snail/api/v0.1/comps              |检索所有公司 
+GET         |http://api.chih.me/snail/api/v0.1/comps/[id]         |检索单个公司 
+POST        |http://api.chih.me/snail/api/v0.1/comps              |上传公司
+POST        |http://api.chih.me/snail/api/v0.1/upload             |上传图片
+GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |上传图片
 
 ##API调用说明
 
@@ -32,6 +39,14 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]|获取图片
 通过`POST` 传送`json` （数据类型待完善）(通过已有密码或token保护)
 
 成功返回json格式用户名，错误返回处理后json格式的400 `{'error': 'Bad Request'}`
+
+###获取所有用户信息
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/users
+
+###获取单个用户信息
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/users/1
 
 ###密码认证
 
@@ -49,6 +64,38 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]|获取图片
 
 指定用户为token，密码为空获取资源，token有有效期，为十分钟
 
+
+###问题上传
+
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"type":"计算机","title":"ggggggg","content":"gggggg"}' http://api.chih.me/snail/api/v0.1/queses
+注意：问题类型为`已存在`的公司类型
+
+###获取所有问题信息
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/queses
+
+
+###获取单个问题信息
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/queses/1
+
+
+###公司信息上传
+
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"type":"计算机","name":"阿里巴巴"}' http://api.chih.me/snail/api/v0.1/comps
+
+
+
+###获取所有公司信息
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/comps
+
+
+###获取单个公司信息
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/comps/1
+
+
 ###上传图片
 
 表单 
@@ -62,3 +109,10 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]|获取图片
         "sha1": "72e61b143f989fcfb12b01be71eeda18c210a135"
     }
 
+
+###获取图片
+
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/pic/sha1  
+    
+ 
