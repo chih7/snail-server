@@ -27,7 +27,7 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]|获取图片
 
 ###用户注册
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","password":"python"}' http://api.chih.me/snail/api/v0.1/users
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","password":"python","type":"student"}' http://api.chih.me/snail/api/v0.1/users
     
 通过`POST` 传送`json` （数据类型待完善）(通过已有密码或token保护)
 

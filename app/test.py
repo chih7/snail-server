@@ -9,7 +9,6 @@ import datetime
 import hashlib
 from flask import Flask
 from flask import jsonify
-from flask import redirect
 from flask import Response
 from flask import abort
 from flask import make_response
@@ -43,7 +42,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(64))
-    # type = db.Column(db.String(64))
+    type = db.Column(db.String(64))
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
@@ -66,6 +65,11 @@ class User(db.Model):
             return None  # invalid token
         user = User.query.get(data['id'])
         return user
+
+
+class Ques(db.Model):
+    __tablename__ = 'ques'
+    id = db.Column(db.Integer, primary_key=True)
 
 
 def make_public_user(user):
@@ -118,7 +122,7 @@ def get_user(user_id):
     user = User.query.get(user_id)
     if not user:
         abort(400)
-    return jsonify({'id': user.id, 'username': user.username})
+    return jsonify({'id': user.id, 'username': user.username, 'type': user.type})
 
 
 @app.route('/snail/api/v0.1/users', methods=['POST'])
@@ -126,16 +130,17 @@ def get_user(user_id):
 def create_user():
     username = request.json.get('username')
     password = request.json.get('password')
+    type = request.json.get('type')
     if username is None or password is None:
         abort(400)
     if User.query.filter_by(username=username).first() is not None:  # exsiting user
         abort(400)
-    user = User(username=username)
+    user = User(username=username, type=type)
     user.hash_password(password)
     db.session.add(user)
     db.session.commit()
     #return jsonify({'username': map(make_public_user, user)}), 201
-    return jsonify({'id': user.id, 'username': user.username}), 201
+    return jsonify({'id': user.id, 'username': user.username, 'type': user.type}), 201
     # {'Location': url_for('get_user', id = user.id, _external = True)}
 
 
@@ -244,6 +249,8 @@ def upload():
 #     </form>
 #     '''
 
+
+#@app.route('')
 
 if __name__ == '__main__':
     if not os.path.exists('db.sqlite'):
