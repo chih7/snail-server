@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f9829647-7e9d-4408-9ce1-d061e1dd7dd3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/test.py" afterPath="$PROJECT_DIR$/app/test.py" />
-    </list>
+    <list default="true" id="f9829647-7e9d-4408-9ce1-d061e1dd7dd3" name="Default" comment="" />
     <ignored path="flask.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,8 +26,8 @@
       <file leaf-file-name="test.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.56806284" vertical-offset="3091" max-vertical-offset="3855">
-              <caret line="235" column="14" selection-start-line="235" selection-start-column="14" selection-end-line="235" selection-end-column="14" />
+            <state vertical-scroll-proportion="0.35209423" vertical-offset="3001" max-vertical-offset="3855">
+              <caret line="218" column="39" selection-start-line="218" selection-start-column="39" selection-end-line="218" selection-end-column="39" />
               <folding>
                 <element signature="e#20#29#0" expanded="true" />
               </folding>
@@ -661,8 +658,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.56806284" vertical-offset="3091" max-vertical-offset="3855">
-          <caret line="235" column="14" selection-start-line="235" selection-start-column="14" selection-end-line="235" selection-end-column="14" />
+        <state vertical-scroll-proportion="0.35209423" vertical-offset="3001" max-vertical-offset="3855">
+          <caret line="218" column="39" selection-start-line="218" selection-start-column="39" selection-end-line="218" selection-end-column="39" />
           <folding>
             <element signature="e#20#29#0" expanded="true" />
           </folding>
