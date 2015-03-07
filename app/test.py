@@ -1,33 +1,29 @@
 #!flask/bin/python
 
 import os
+import pymongo
+import bson.binary
+import bson.objectid
+import bson.errors
+import datetime
+import hashlib
 from flask import Flask
 from flask import jsonify
+from flask import redirect
+from flask import Response
 from flask import abort
 from flask import make_response
 from flask import request
 from flask import url_for
 from flask import g
+from cStringIO import StringIO
 from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
+from PIL import Image
 
-# users = [
-#     {
-#         'id': 1,
-#         'name': u'test',
-#         'password': u'test',
-#         'type': u'student'
-#     },
-#     {
-#         'id': 2,
-#         'name': u'test2',
-#         'password': u'test2',
-#         'type': u'student'
-#     }
-# ]
 
 # initialization
 app = Flask(__name__)
@@ -35,9 +31,11 @@ app.config['SECRET_KEY'] = 'watchaaaaaadog'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
-#extensions
+# extensions
 auth = HTTPBasicAuth()
 db = SQLAlchemy(app)
+
+mongodb = pymongo.MongoClient('localhost', 27017).pic
 
 
 class User(db.Model):
@@ -45,7 +43,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(64))
-    #type = db.Column(db.String(64))
+    # type = db.Column(db.String(64))
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
@@ -53,9 +51,9 @@ class User(db.Model):
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)
 
-    def generate_auth_token(self, expiration = 600):
-        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
-        return s.dumps({ 'id': self.id })
+    def generate_auth_token(self, expiration=600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id': self.id})
 
     @staticmethod
     def verify_auth_token(token):
@@ -79,6 +77,7 @@ def make_public_user(user):
             new_user[field] = user[field]
     return new_user
 
+
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not Found'}), 404)
@@ -89,15 +88,10 @@ def not_found(error):
     return make_response(jsonify({'error': 'Bad Request'}), 400)
 
 
-# @auth.verify_password
-# def verify_password(username, password):
-#     #user = User.verify_auth_token(username)
-#     # if not user:
-#     user = User.query.filter_by(username=username).first()
-#     if not user or not user.verify_password(password):
-#         return False
-#     g.user = user
-#     return True
+@auth.error_handler
+def unauthorized():
+    return make_response(jsonify({'error': 'Unauthorized access'}), 401)
+
 
 @auth.verify_password
 def verify_password(username_or_token, password):
@@ -109,23 +103,12 @@ def verify_password(username_or_token, password):
     g.user = user
     return True
 
-# @auth.get_password
-# def get_password(username):
-#     if username == 'ok':
-#         return 'python'
-#     return None
 
-
-@auth.error_handler
-def unauthorized():
-    return make_response(jsonify({'error': 'Unauthorized access'}), 401)
-
-
-@app.route('/snail/api/v0.1/users', methods=['GET'])
-@auth.login_required
-def get_users():
-    users = User.query.get()
-    return jsonify({'users': map(make_public_user, users)})
+# @app.route('/snail/api/v0.1/users', methods=['GET'])
+# @auth.login_required
+# def get_users():
+# users = User.query.get()
+#     return jsonify({'users': map(make_public_user, users)})
 
 
 @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['GET'])
@@ -135,7 +118,7 @@ def get_user(user_id):
     user = User.query.get(user_id)
     if not user:
         abort(400)
-    return jsonify({'username': user.username})
+    return jsonify({'id': user.id, 'username': user.username})
 
 
 @app.route('/snail/api/v0.1/users', methods=['POST'])
@@ -147,19 +130,12 @@ def create_user():
         abort(400)
     if User.query.filter_by(username=username).first() is not None:  # exsiting user
         abort(400)
-    # user = {
-    #     'id': users[-1]['id'] + 1,
-    #     'name': request.json['name'],
-    #     'passwd': request.json['passwd'],
-    #     'type': request.json['type']
-    # }
-    # users.append(user)
     user = User(username=username)
     user.hash_password(password)
     db.session.add(user)
     db.session.commit()
     #return jsonify({'username': map(make_public_user, user)}), 201
-    return jsonify({'username': user.username}), 201
+    return jsonify({'id': user.id, 'username': user.username}), 201
     # {'Location': url_for('get_user', id = user.id, _external = True)}
 
 
@@ -182,14 +158,14 @@ def create_user():
 #     user[0]['type'] = request.json.get('type', user[0]['type'])
 #     return jsonify({'username': user[0]})
 
-
 # @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['DELETE'])
 # @auth.login_required
 # def delete_user(user_id):
-#     user = filter(lambda t: t['id'] == user_id, users)
-#     if len(user) == 0:
+#     if User.query.filter_by(id=user_id).first() is None:
 #         abort(404)
-#     users.remove(user[0])
+#     user = User(id=user_id)
+#     db.session.remove(user)
+#     db.session.commit()
 #     return jsonify({'result': True})
 
 
@@ -200,10 +176,71 @@ def get_auth_token():
     return jsonify({'token': token.decode('ascii')})
 
 
-@app.route('/snail/api/v0.1/resource')
+@app.route('/snail/api/v0.1/ok')
 @auth.login_required
 def get_resource():
-    return jsonify({ 'data': 'Hello, %s!' % g.user.username })
+    return jsonify({'isok': 'ok!'})
+
+
+allow_formats = set(['jpeg', 'png', 'gif'])
+
+
+def save_file(f):
+    content = StringIO(f.read())
+    try:
+        mime = Image.open(content).format.lower()
+        if mime not in allow_formats:
+            raise IOError()
+    except IOError:
+        abort(400)
+
+    sha1 = hashlib.sha1(content.getvalue()).hexdigest()
+    c = dict(
+        content=bson.binary.Binary(content.getvalue()),
+        mime=mime,
+        time=datetime.datetime.utcnow(),
+        sha1=sha1,
+    )
+    try:
+        mongodb.files.save(c)
+    except pymongo.errors.DulicateKeyError:
+        pass
+    return sha1
+
+
+@app.route('/snail/api/v0.1/pic/<sha1>')
+def server_file(sha1):
+    try:
+        f = mongodb.files.find_one({'sha1': sha1})
+        if f is None:
+            raise bson.errors.InvalidId()
+        if request.headers.get('If_Modified_Since') == f['time'].ctime():
+            return Response(status=304)
+        resp = Response(f['content'], mimetype='image/' + f['mime'])
+        resp.headers['Last-Modified'] = f['time'].ctime()
+        return resp
+    except bson.errors.InvalidId:
+        abort(404)
+
+
+@app.route('/snail/api/v0.1/upload', methods=['POST'])
+def upload():
+    f = request.files['uploaded_file']
+    sha1 = save_file(f)
+    return redirect('/snail/api/v0.1/pic/' + str(sha1))
+
+
+@app.route('/')
+def index():
+    return '''
+    <!doctype html>
+    <html>
+    <body>
+    <form action='/snail/api/v0.1/upload' method='post' enctype='multipart/form-data'>
+         <input type='file' name='uploaded_file'>
+         <input type='submit' value='Upload'>
+    </form>
+    '''
 
 
 if __name__ == '__main__':
