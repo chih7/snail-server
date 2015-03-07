@@ -8,12 +8,15 @@
 
 HTTP方法    |URI                                          |动作           
  ---------- |---------------------------------------------|------------- 
-GET         |http://api.chih.me//snail/api/v0.1/users     |检索所有用户
-GET         |http://api.chih.me//snail/api/v0.1/users/[id]|检索单个用户
-POST        |http://api.chih.me//snail/api/v0.1/users     |创建新用户 
-PUT         |http://api.chih.me//snail/api/v0.1/users/[id]|更新用户信息
-DELETE      |http://api.chih.me//snail/api/v0.1/users/[id]|删除用户  
-
+GET         |http://api.chih.me/snail/api/v0.1/users     |检索所有用户
+GET         |http://api.chih.me/snail/api/v0.1/users/[id]|检索单个用户
+POST        |http://api.chih.me/snail/api/v0.1/users     |创建新用户 
+PUT         |http://api.chih.me/snail/api/v0.1/users/[id]|更新用户信息
+DELETE      |http://api.chih.me/snail/api/v0.1/users/[id]|删除用户
+GET         |http://api.chih.me/snail/api/v0.1/ok        |登录验证
+GET         |http://api.chih.me/snail/api/v0.1/token     |获取token
+POST        |http://api.chih.me/snail/api/v0.1/upload    |上传图片
+GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]|获取图片
 
 ##API调用说明
 
@@ -24,25 +27,38 @@ DELETE      |http://api.chih.me//snail/api/v0.1/users/[id]|删除用户
 
 ###用户注册
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","password":"python"}' http://api.chih.me//snail/api/v0.1/users
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","password":"python"}' http://api.chih.me/snail/api/v0.1/users
     
 通过`POST` 传送`json` （数据类型待完善）(通过已有密码或token保护)
 
-成功返回json格式用户名，错误返回处理后json格式的400
+成功返回json格式用户名，错误返回处理后json格式的400 `{'error': 'Bad Request'}`
 
 ###密码认证
 
-    $ curl -u miguel:python -i -X GET http://api.chih.me//snail/api/v0.1/users
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/ok
     
-指定用户、密码
+指定用户、密码，验证通过则返回`{'isok': 'ok!'}`
 
 ###token认证
 
-    $ curl -u miguel:python -i -X GET http://api.chih.me//snail/api/v0.1/token
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/token
     
 指定用户密码GET `http://api.chih.me//snail/api/v0.1/token` 返回token
 
-    $ curl -u TOKEN -i -X GET http://api.chih.me//snail/api/v0.1/users
+    $ curl -u TOKEN -i -X GET http://api.chih.me/snail/api/v0.1/users
 
 指定用户为token，密码为空获取资源，token有有效期，为十分钟
+
+###上传图片
+
+表单 
+    
+        <form action='/snail/api/v0.1/upload' method='post' enctype='multipart/form-data'>
+            <input type='file' name='uploaded_file'>
+
+返回图片sha1 
+  
+    {
+        "sha1": "72e61b143f989fcfb12b01be71eeda18c210a135"
+    }
 

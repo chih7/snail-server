@@ -209,6 +209,7 @@ def save_file(f):
 
 
 @app.route('/snail/api/v0.1/pic/<sha1>')
+@auth.login_required
 def server_file(sha1):
     try:
         f = mongodb.files.find_one({'sha1': sha1})
@@ -224,23 +225,24 @@ def server_file(sha1):
 
 
 @app.route('/snail/api/v0.1/upload', methods=['POST'])
+@auth.login_required
 def upload():
     f = request.files['uploaded_file']
     sha1 = save_file(f)
-    return redirect('/snail/api/v0.1/pic/' + str(sha1))
+    return jsonify({'sha1': sha1})
 
 
-@app.route('/')
-def index():
-    return '''
-    <!doctype html>
-    <html>
-    <body>
-    <form action='/snail/api/v0.1/upload' method='post' enctype='multipart/form-data'>
-         <input type='file' name='uploaded_file'>
-         <input type='submit' value='Upload'>
-    </form>
-    '''
+# @app.route('/')
+# def index():
+#     return '''
+#     <!doctype html>
+#     <html>
+#     <body>
+#     <form action='/snail/api/v0.1/upload' method='post' enctype='multipart/form-data'>
+#          <input type='file' name='uploaded_file'>
+#          <input type='submit' value='Upload'>
+#     </form>
+#     '''
 
 
 if __name__ == '__main__':
