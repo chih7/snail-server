@@ -1,4 +1,5 @@
 #!flask/bin/python
+# -*- coding: utf-8 -*-
 
 import os
 import pymongo
@@ -70,6 +71,16 @@ class User(db.Model):
 class Ques(db.Model):
     __tablename__ = 'ques'
     id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(64))
+    title = db.Column(db.String(64))
+    content = db.Column(db.String(2048))
+
+
+class Comp(db.Model):
+    __tablename__ = 'comp'
+    id = db.Column(db.Integer, primary_key=True)
+    comp_type = db.Column(db.String(64))
+    name = db.Column(db.String(64))
 
 
 def make_public_user(user):
@@ -142,6 +153,72 @@ def create_user():
     #return jsonify({'username': map(make_public_user, user)}), 201
     return jsonify({'id': user.id, 'username': user.username, 'type': user.type}), 201
     # {'Location': url_for('get_user', id = user.id, _external = True)}
+
+
+@app.route('/snail/api/v0.1/ques/<int:ques_id>', methods=['GET'])
+@auth.login_required
+def get_ques(ques_id):
+    ques = Ques.query.get(ques_id)
+    if not ques:
+        abort(404)
+    return jsonify({'id': ques.id, 'type': ques.type, 'title': ques.title, 'content': ques.content})
+
+
+@app.route('/snail/api/v0.1/ques', methods=['GET'])
+@auth.login_required
+def get_queses():
+    queses = Ques.query.get()
+    if not queses:
+        abort(404)
+    return jsonify({'queses': queses})
+
+
+@app.route('/snail/api/v0.1/ques', methods=['POST'])
+@auth.login_required
+def create_ques():
+    type = request.json.get('type')
+    title = request.json.get('title')
+    content = request.json.get('content')
+    if title is None or type is None:
+        abort(400)
+    if Ques.query.filter_by(type=type).first() is None:
+        abort(400)
+    ques = Ques(type=type, title=title, content=content)
+    db.session.add(ques)
+    db.session.commit()
+    return jsonify({'id': ques.id, 'type': ques.type, 'title': ques.title, 'content': ques.content}), 201
+
+
+@app.route('/snail/api/v0.1/comps/<int:comp_id>', methods=['GET'])
+@auth.login_required
+def get_comp(comp_id):
+    comp = Ques.query.get(comp_id)
+    if not comp:
+        abort(404)
+    return jsonify({'id': comp.id, 'type': comp.comp_type, 'name': comp.name})
+
+
+@app.route('/snail/api/v0.1/comps', methods=['GET'])
+@auth.login_required
+def get_comps():
+    comps = Ques.query.get()
+    if not comps:
+        abort(404)
+    return jsonify({'comps': comps})
+
+
+@app.route('/snail/api/v0.1/comps', methods=['POST'])
+@auth.login_required
+def create_comps():
+    comp_type = request.json.get('type')
+    name = request.json.get('name')
+    if comp_type is None or name is None:
+        abort(400)
+    comp = Comp(comp_type=comp_type, name=name)
+    db.session.add(comp)
+    db.session.commit()
+    return jsonify({'id': comp.id, 'type': comp.comp_type, 'name': comp.name}), 201
+
 
 
 # @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['PUT'])
@@ -249,8 +326,6 @@ def upload():
 #     </form>
 #     '''
 
-
-#@app.route('')
 
 if __name__ == '__main__':
     if not os.path.exists('db.sqlite'):
