@@ -8,7 +8,6 @@ import bson.objectid
 import bson.errors
 import datetime
 import hashlib
-#import sys
 from flask import Flask
 from flask import jsonify
 from flask import Response
@@ -123,6 +122,9 @@ def verify_password(username_or_token, password):
     g.user = user
     return True
 
+#==============================================================================
+#users
+
 
 @app.route('/snail/api/v0.1/users', methods=['GET'])
 @auth.login_required
@@ -173,6 +175,53 @@ def create_user():
     # {'Location': url_for('get_user', id = user.id, _external = True)}
 
 
+# @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['PUT'])
+# @auth.login_required
+# def update_user(user_id):
+#     user = User.query.get(user_id)
+#     if not user:
+#         abort(404)
+#     if not request.json:
+#         abort(400)
+#     if 'username' in request.json and type(request.json['namename']) != unicode:
+#         abort(400)
+#     if 'password' in request.json and type(request.json['password']) != unicode:
+#         abort(400)
+#     if 'type' in request.json and type(request.json['type']) != unicode:
+#         abort(400)
+#     user[0]['username'] = request.json.get('username', user[0]['username'])
+#     user[0]['password'] = request.json.get('password', user[0]['password'])
+#     user[0]['type'] = request.json.get('type', user[0]['type'])
+#     return jsonify({'username': user[0]})
+
+# @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['DELETE'])
+# @auth.login_required
+# def delete_user(user_id):
+#     if User.query.filter_by(id=user_id).first() is None:
+#         abort(404)
+#     user = User(id=user_id)
+#     db.session.remove(user)
+#     db.session.commit()
+#     return jsonify({'result': True})
+
+
+@app.route('/snail/api/v0.1/token')
+@auth.login_required
+def get_auth_token():
+    token = g.user.generate_auth_token()
+    return jsonify({'token': token.decode('ascii')})
+
+
+@app.route('/snail/api/v0.1/ok')
+@auth.login_required
+def get_resource():
+    return jsonify({'isok': 'ok!'})
+
+
+#=======================================================================================
+#ques
+
+
 @app.route('/snail/api/v0.1/queses/<int:ques_id>', methods=['GET'])
 @auth.login_required
 def get_ques(ques_id):
@@ -218,6 +267,10 @@ def create_ques():
     return jsonify({'id': ques.id, 'type': ques.type, 'title': ques.title, 'content': ques.content}), 201
 
 
+#=========================================================================================================
+#comp
+
+
 @app.route('/snail/api/v0.1/comps/<int:comp_id>', methods=['GET'])
 @auth.login_required
 def get_comp(comp_id):
@@ -259,48 +312,8 @@ def create_comps():
     return jsonify({'id': comp.id, 'type': comp.comp_type, 'name': comp.name}), 201
 
 
-
-# @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['PUT'])
-# @auth.login_required
-# def update_user(user_id):
-#     user = User.query.get(user_id)
-#     if not user:
-#         abort(404)
-#     if not request.json:
-#         abort(400)
-#     if 'username' in request.json and type(request.json['namename']) != unicode:
-#         abort(400)
-#     if 'password' in request.json and type(request.json['password']) != unicode:
-#         abort(400)
-#     if 'type' in request.json and type(request.json['type']) != unicode:
-#         abort(400)
-#     user[0]['username'] = request.json.get('username', user[0]['username'])
-#     user[0]['password'] = request.json.get('password', user[0]['password'])
-#     user[0]['type'] = request.json.get('type', user[0]['type'])
-#     return jsonify({'username': user[0]})
-
-# @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['DELETE'])
-# @auth.login_required
-# def delete_user(user_id):
-#     if User.query.filter_by(id=user_id).first() is None:
-#         abort(404)
-#     user = User(id=user_id)
-#     db.session.remove(user)
-#     db.session.commit()
-#     return jsonify({'result': True})
-
-
-@app.route('/snail/api/v0.1/token')
-@auth.login_required
-def get_auth_token():
-    token = g.user.generate_auth_token()
-    return jsonify({'token': token.decode('ascii')})
-
-
-@app.route('/snail/api/v0.1/ok')
-@auth.login_required
-def get_resource():
-    return jsonify({'isok': 'ok!'})
+#============================================================================================
+#pic
 
 
 allow_formats = set(['jpeg', 'png', 'gif'])
