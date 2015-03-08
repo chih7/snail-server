@@ -224,7 +224,7 @@ def get_comp(comp_id):
     comp = Ques.query.get(comp_id)
     if not comp:
         abort(404)
-    return jsonify({'id': comp.id, 'type': comp.comp_type, 'name': comp.name})
+    return jsonify({'id': comp.id, 'comp_type': comp.comp_type, 'name': comp.name})
 
 
 @app.route('/snail/api/v0.1/comps', methods=['GET'])
