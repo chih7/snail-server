@@ -221,7 +221,7 @@ def create_ques():
 @app.route('/snail/api/v0.1/comps/<int:comp_id>', methods=['GET'])
 @auth.login_required
 def get_comp(comp_id):
-    comp = Ques.query.get(comp_id)
+    comp = Comp.query.get(comp_id)
     if not comp:
         abort(404)
     return jsonify({'id': comp.id, 'type': comp.comp_type, 'name': comp.name})
