@@ -77,7 +77,7 @@ class Ques(db.Model):
     __tablename__ = 'ques'
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column((db.String(64)))
-    comp = db.Column((db.String(64)))
+    comp_id = db.Column((db.String(64)))
     user_id = db.Column(db.Integer)
     time = db.Column(db.DateTime, default=datetime.now())
     title = db.Column((db.String(1024)))
@@ -169,11 +169,11 @@ def get_user(user_id):
     if not user:
         abort(400)
     return jsonify({'id': user.id, 'username': user.username, 'nickname': user.nickname, 'type': user.type})
-    #return jsonify(user)
+    # return jsonify(user)
 
 
 @app.route('/snail/api/v0.1/users', methods=['POST'])
-#@auth.login_required
+# @auth.login_required
 def create_user():
     username = request.json.get('username')
     nickname = request.json.get('nickname')
@@ -183,11 +183,11 @@ def create_user():
         abort(400)
     if User.query.filter_by(username=username).first() is not None:  # exsiting user
         abort(400)
-    user = User(username=username, type=type)
+    user = User(username=username, nickname=nickname, type=type)
     user.hash_password(password)
     db.session.add(user)
     db.session.commit()
-    #return jsonify({'username': map(make_public_user, user)}), 201
+    # return jsonify({'username': map(make_public_user, user)}), 201
     return jsonify({'id': user.id, 'username': user.username, 'nickname': user.nickname, 'type': user.type}), 201
     # {'Location': url_for('get_user', id = user.id, _external = True)}
 
@@ -195,8 +195,8 @@ def create_user():
 # @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['PUT'])
 # @auth.login_required
 # def update_user(user_id):
-#     user = User.query.get(user_id)
-#     if not user:
+# user = User.query.get(user_id)
+# if not user:
 #         abort(404)
 #     if not request.json:
 #         abort(400)
@@ -247,7 +247,7 @@ def get_ques(ques_id):
         abort(404)
     return jsonify({'id': ques.id,
                     'type': ques.type,
-                    'comp': ques.comp,
+                    'comp_id': ques.comp_id,
                     'user_id': ques.user_id,
                     'time': ques.time,
                     'title': ques.title,
@@ -267,7 +267,7 @@ def get_queses():
         ques_item = {
             'id': ques.id,
             'type': ques.type,
-            'comp': ques.comp,
+            'comp_id': ques.comp_id,
             'user_id': ques.user_id,
             'time': ques.time,
             'title': ques.title,
@@ -280,18 +280,18 @@ def get_queses():
 @app.route('/snail/api/v0.1/queses', methods=['POST'])
 @auth.login_required
 def get_comp_queses():
-    comp = request.json.get('comp')
-    queses_num = Ques.query.filter_by(comp=comp).cout()
+    comp_id = request.json.get('comp_id')
+    queses_num = Ques.query.filter_by(comp_id=comp_id).cout()
     queses = []
     if queses_num == 0:
         abort(404)
     for ques_id in range(1, queses_num + 1):
-        ques = Ques.query.filter_by(comp=comp).get(ques_id)
+        ques = Ques.query.filter_by(comp_id=comp_id).get(ques_id)
 
         ques_item = {
             'id': ques.id,
             'type': ques.type,
-            'comp': ques.comp,
+            'comp_id': ques.comp_id,
             'user_id': ques.user_id,
             'time': ques.time,
             'title': ques.title,
@@ -305,26 +305,116 @@ def get_comp_queses():
 @auth.login_required
 def create_ques():
     type = request.json.get('type')
-    comp = request.json.get('comp')
+    comp_id = request.json.get('comp_id')
     user_id = request.json.get('user_id')
     title = request.json.get('title')
     content = request.json.get('content')
     if title is None or type is None:
         abort(400)
-    if Comp.query.filter_by(comp_type=type).first() is None\
-            or Comp.query.filter_by(name=comp) is None\
+    if Comp.query.filter_by(comp_type=type).first() is None \
+            or Comp.query.filter_by(id=comp_id) is None \
             or User.query.filter_by(id=user_id) is None:
         abort(400)
-    ques = Ques(type=type, comp=comp, user_id=user_id, title=title, content=content)
+    ques = Ques(type=type, comp_id=comp_id, user_id=user_id, title=title, content=content)
     db.session.add(ques)
     db.session.commit()
     return jsonify({'id': ques.id,
                     'type': ques.type,
-                    'comp': ques.comp,
+                    'comp_id': ques.comp_id,
                     'user_id': ques.user_id,
                     'time': ques.time,
                     'title': ques.title,
                     'content': ques.content})
+
+
+
+#=======================================================================================
+#answer
+
+
+@app.route('/snail/api/v0.1/answers/<int:answer_id>', methods=['GET'])
+@auth.login_required
+def get_answer(answer_id):
+    answer = Answer.query.get(answer_id)
+    if not answer:
+        abort(404)
+    return jsonify({'id': answer.id,
+                    'ques_id': answer.ques_id,
+                    'user_id': answer.user_id,
+                    'time': answer.time,
+                    'number': answer.number,
+                    'content': answer.content})
+
+
+@app.route('/snail/api/v0.1/answers', methods=['GET'])
+@auth.login_required
+def get_answers():
+    answers_num = Answer.query.count()
+    answers = []
+    if answers_num == 0:
+        abort(404)
+    for answer_id in range(1, answers_num + 1):
+        answer = Answer.query.get(answer_id)
+
+        answer_item = {
+            'id': answer.id,
+            'ques_id': answer.ques_id,
+            'user_id': answer.user_id,
+            'time': answer.time,
+            'number': answer.number,
+            'content': answer.content
+        }
+        answers.append(answer_item)
+    return jsonify({'answers': answers})
+
+
+@app.route('/snail/api/v0.1/answers', methods=['POST'])
+@auth.login_required
+def get_ques_answers():
+    ques_id = request.json.get('ques_id')
+    answers_num = Answer.query.filter_by(ques_id=ques_id).cout()
+    answers = []
+    if answers_num == 0:
+        abort(404)
+    for answer_id in range(1, answers_num + 1):
+        answer = Answer.query.filter_by(ques_id=ques_id).get(answer_id)
+
+        answer_item = {
+            'id': answer.id,
+            'ques_id': answer.ques_id,
+            'user_id': answer.user_id,
+            'time': answer.time,
+            'number': answer.number,
+            'content': answer.content
+        }
+        answers.append(answer_item)
+    return jsonify({'answers': answers})
+
+
+@app.route('/snail/api/v0.1/answers', methods=['POST'])
+@auth.login_required
+def create_answer():
+    type = request.json.get('type')
+    ques_id = request.json.get('ques_id')
+    user_id = request.json.get('user_id')
+    title = request.json.get('title')
+    content = request.json.get('content')
+    if title is None or type is None:
+        abort(400)
+    if Comp.query.filter_by(ques_type=type).first() is None \
+            or Comp.query.filter_by(id=ques_id) is None \
+            or User.query.filter_by(id=user_id) is None:
+        abort(400)
+    answer = Answer(type=type, ques_id=ques_id, user_id=user_id, title=title, content=content)
+    db.session.add(answer)
+    db.session.commit()
+    return jsonify({'id': answer.id,
+                    'ques_id': answer.ques_id,
+                    'user_id': answer.user_id,
+                    'time': answer.time,
+                    'number': answer.number,
+                    'content': answer.content})
+
 
 #=========================================================================================================
 #comp
