@@ -246,7 +246,6 @@ def get_ques(ques_id):
     if not ques:
         abort(404)
     return jsonify({'id': ques.id,
-                    'type': ques.type,
                     'comp_id': ques.comp_id,
                     'user_id': ques.user_id,
                     'time': ques.time,
@@ -266,7 +265,6 @@ def get_queses():
 
         ques_item = {
             'id': ques.id,
-            'type': ques.type,
             'comp_id': ques.comp_id,
             'user_id': ques.user_id,
             'time': ques.time,
@@ -289,7 +287,6 @@ def get_comp_queses():
     for ques in quesfilter:
         ques_item = {
             'id': ques.id,
-            'type': ques.type,
             'comp_id': ques.comp_id,
             'user_id': ques.user_id,
             'time': ques.time,
@@ -304,22 +301,19 @@ def get_comp_queses():
 @app.route('/snail/api/v0.1/queses', methods=['POST'])
 @auth.login_required
 def create_ques():
-    type = request.json.get('type')
     comp_id = request.json.get('comp_id')
     user_id = request.json.get('user_id')
     title = request.json.get('title')
     content = request.json.get('content')
     if title is None or type is None:
         abort(400)
-    if Comp.query.filter_by(comp_type=type).first() is None \
-            or Comp.query.filter_by(id=comp_id).first() is None \
+    if Comp.query.filter_by(id=comp_id).first() is None \
             or User.query.filter_by(id=user_id).first() is None:
         abort(400)
-    ques = Ques(type=type, comp_id=comp_id, user_id=user_id, title=title, content=content)
+    ques = Ques(comp_id=comp_id, user_id=user_id, title=title, content=content)
     db.session.add(ques)
     db.session.commit()
     return jsonify({'id': ques.id,
-                    'type': ques.type,
                     'comp_id': ques.comp_id,
                     'user_id': ques.user_id,
                     'time': ques.time,
