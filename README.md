@@ -34,7 +34,7 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |上传图片
 
 ###用户注册
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","password":"python","type":"student"}' http://api.chih.me/snail/api/v0.1/users
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","nickname":"查尔斯","password":"python","type":"student"}' http://api.chih.me/snail/api/v0.1/users
     
 通过`POST` 传送`json` （数据类型待完善）(通过已有密码或token保护)
 
@@ -67,7 +67,7 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |上传图片
 
 ###问题上传
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"type":"计算机","title":"ggggggg","content":"gggggg"}' http://api.chih.me/snail/api/v0.1/queses
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"type":"计算机","comp_id":"1","user_id":"1","title":"测试","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/queses
 注意：问题类型为`已存在`的公司类型
 
 ###获取所有问题信息
