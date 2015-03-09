@@ -136,8 +136,9 @@ def verify_password(username_or_token, password):
     g.user = user
     return True
 
-#==============================================================================
-#users
+
+# ==============================================================================
+# users
 
 
 @app.route('/snail/api/v0.1/users', methods=['GET'])
@@ -147,7 +148,7 @@ def get_users():
     users = []
     if users_num == 0:
         abort(404)
-    for user_id in range(1, users_num+1):
+    for user_id in range(1, users_num + 1):
         user = User.query.get(user_id)
 
         user_item = {
@@ -244,7 +245,13 @@ def get_ques(ques_id):
     ques = Ques.query.get(ques_id)
     if not ques:
         abort(404)
-    return jsonify({'id': ques.id, 'type': ques.type, 'title': ques.title, 'content': ques.content})
+    return jsonify({'id': ques.id,
+                    'type': ques.type,
+                    'comp': ques.comp,
+                    'user_id': ques.user_id,
+                    'time': ques.time,
+                    'title': ques.title,
+                    'content': ques.content})
 
 
 @app.route('/snail/api/v0.1/queses', methods=['GET'])
@@ -254,12 +261,39 @@ def get_queses():
     queses = []
     if queses_num == 0:
         abort(404)
-    for ques_id in range(1, queses_num+1):
+    for ques_id in range(1, queses_num + 1):
         ques = Ques.query.get(ques_id)
 
         ques_item = {
             'id': ques.id,
             'type': ques.type,
+            'comp': ques.comp,
+            'user_id': ques.user_id,
+            'time': ques.time,
+            'title': ques.title,
+            'content': ques.content
+        }
+        queses.append(ques_item)
+    return jsonify({'queses': queses})
+
+
+@app.route('/snail/api/v0.1/queses', methods=['POST'])
+@auth.login_required
+def get_comp_queses():
+    comp = request.json.get('comp')
+    queses_num = Ques.query.filter_by(comp=comp).cout()
+    queses = []
+    if queses_num == 0:
+        abort(404)
+    for ques_id in range(1, queses_num + 1):
+        ques = Ques.query.filter_by(comp=comp).get(ques_id)
+
+        ques_item = {
+            'id': ques.id,
+            'type': ques.type,
+            'comp': ques.comp,
+            'user_id': ques.user_id,
+            'time': ques.time,
             'title': ques.title,
             'content': ques.content
         }
@@ -271,17 +305,26 @@ def get_queses():
 @auth.login_required
 def create_ques():
     type = request.json.get('type')
+    comp = request.json.get('comp')
+    user_id = request.json.get('user_id')
     title = request.json.get('title')
     content = request.json.get('content')
     if title is None or type is None:
         abort(400)
-    if Comp.query.filter_by(comp_type=type).first() is None:
-       abort(400)
-    ques = Ques(type=type, title=title, content=content)
+    if Comp.query.filter_by(comp_type=type).first() is None\
+            or Comp.query.filter_by(name=comp) is None\
+            or User.query.filter_by(id=user_id) is None:
+        abort(400)
+    ques = Ques(type=type, comp=comp, user_id=user_id, title=title, content=content)
     db.session.add(ques)
     db.session.commit()
-    return jsonify({'id': ques.id, 'type': ques.type, 'title': ques.title, 'content': ques.content}), 201
-
+    return jsonify({'id': ques.id,
+                    'type': ques.type,
+                    'comp': ques.comp,
+                    'user_id': ques.user_id,
+                    'time': ques.time,
+                    'title': ques.title,
+                    'content': ques.content})
 
 #=========================================================================================================
 #comp
@@ -303,7 +346,7 @@ def get_comps():
     comps = []
     if comps_num == 0:
         abort(404)
-    for comp_id in range(1, comps_num+1):
+    for comp_id in range(1, comps_num + 1):
         comp = Comp.query.get(comp_id)
 
         comp_item = {
