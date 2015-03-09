@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d524c6b8-f6a8-4960-b702-4f623f10ec8d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="flask.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -43,8 +42,8 @@
       <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="4.804401" vertical-offset="0" max-vertical-offset="2370">
-              <caret line="131" column="3" selection-start-line="131" selection-start-column="3" selection-end-line="131" selection-end-column="3" />
+            <state vertical-scroll-proportion="0.6968215" vertical-offset="855" max-vertical-offset="2370">
+              <caret line="76" column="132" selection-start-line="76" selection-start-column="132" selection-end-line="76" selection-end-column="132" />
               <folding />
             </state>
           </provider>
@@ -70,8 +69,8 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="243" />
-    <option name="y" value="402" />
+    <option name="x" value="256" />
+    <option name="y" value="332" />
     <option name="width" value="852" />
     <option name="height" value="594" />
   </component>
@@ -397,7 +396,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="243" y="402" width="852" height="594" extended-state="0" />
+    <frame x="256" y="332" width="852" height="594" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -476,8 +475,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="4.804401" vertical-offset="0" max-vertical-offset="2370">
-          <caret line="131" column="3" selection-start-line="131" selection-start-column="3" selection-end-line="131" selection-end-column="3" />
+        <state vertical-scroll-proportion="0.6968215" vertical-offset="855" max-vertical-offset="2370">
+          <caret line="76" column="132" selection-start-line="76" selection-start-column="132" selection-end-line="76" selection-end-column="132" />
           <folding />
         </state>
       </provider>

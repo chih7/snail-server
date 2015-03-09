@@ -74,7 +74,7 @@ POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques|检索问题�
 
 ###问题上传
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"type":"计算机","comp_id":"1","user_id":"1","title":"测试","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/queses
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"type":"计算机","comp_id":"1","user_id":"1","number":"3","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/queses
 注意：问题类型为`已存在`的公司类型
 
 ###获取所有问题信息
