@@ -19,11 +19,16 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |获取图片
 GET         |http://api.chih.me/snail/api/v0.1/queses             |检索所有问题
 GET         |http://api.chih.me/snail/api/v0.1/queses/[id]        |检索单个问题
 POST        |http://api.chih.me/snail/api/v0.1/queses             |上传问题
+POST        |http://api.chih.me/snail/snail/api/v0.1/quesesofcomp |检索公司下的问题
 GET         |http://api.chih.me/snail/api/v0.1/comps              |检索所有公司 
 GET         |http://api.chih.me/snail/api/v0.1/comps/[id]         |检索单个公司 
 POST        |http://api.chih.me/snail/api/v0.1/comps              |上传公司
 POST        |http://api.chih.me/snail/api/v0.1/upload             |上传图片
 GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |上传图片
+GET         |http://api.chih.me/snail/api/v0.1/answers            |检索所有答案
+GET         |http://api.chih.me/snail/api/v0.1/answers/[id]       |检索单个答案
+POST        |http://api.chih.me/snail/api/v0.1/answers            |上传答案
+POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques|检索问题下的答案
 
 ##API调用说明
 
@@ -31,6 +36,7 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |上传图片
     
     api.chih.me
     
+---
 
 ###用户注册
 
@@ -64,6 +70,7 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |上传图片
 
 指定用户为token，密码为空获取资源，token有有效期，为十分钟
 
+---
 
 ###问题上传
 
@@ -78,12 +85,39 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |上传图片
 ###获取单个问题信息
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/queses/1
+    
+    
+###检索公司下的问题
 
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1"}' http://api.chih.me/snail/api/v0.1/quesesofcomp
+
+---
+
+###检索所有答案
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/answers
+
+
+###检索单个答案
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/answer/1
+
+
+###上传答案
+
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"ques_id":"5","user_id":"4","number":"3","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/answers
+
+ques_id,user_id必须已经存在
+
+###检索问题下的答案
+
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"ques_id":"1"}' http://api.chih.me/snail/api/v0.1/answersofques
+
+---
 
 ###公司信息上传
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"type":"计算机","name":"阿里巴巴"}' http://api.chih.me/snail/api/v0.1/comps
-
 
 
 ###获取所有公司信息
@@ -95,6 +129,7 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |上传图片
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/comps/1
 
+---
 
 ###上传图片
 
