@@ -46,6 +46,7 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column((db.String(64)), index=True)
+    nickname = db.Column((db.String(64)))
     password_hash = db.Column((db.String(64)))
     type = db.Column((db.String(64)))
 
@@ -76,8 +77,21 @@ class Ques(db.Model):
     __tablename__ = 'ques'
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column((db.String(64)))
+    comp = db.Column((db.String(64)))
+    user_id = db.Column(db.Integer)
+    time = db.Column(db.DateTime, default=datetime.now())
     title = db.Column((db.String(1024)))
     content = db.Column((db.String(2048)))
+
+
+class Answer(db.Model):
+    __tablename__ = 'answer'
+    id = db.Column(db.Integer, primary_key=True)
+    ques_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
+    time = db.Column(db.DateTime, default=datetime.now())
+    number = db.Column(db.Integer)
+    content = db.Column((db.String(4096)))
 
 
 class Comp(db.Model):
@@ -139,6 +153,7 @@ def get_users():
         user_item = {
             'id': user.id,
             'username': user.username,
+            'nickname': user.nickname,
             'type': user.type
         }
         users.append(user_item)
@@ -152,7 +167,7 @@ def get_user(user_id):
     user = User.query.get(user_id)
     if not user:
         abort(400)
-    return jsonify({'id': user.id, 'username': user.username, 'type': user.type})
+    return jsonify({'id': user.id, 'username': user.username, 'nickname': user.nickname, 'type': user.type})
     #return jsonify(user)
 
 
@@ -160,6 +175,7 @@ def get_user(user_id):
 #@auth.login_required
 def create_user():
     username = request.json.get('username')
+    nickname = request.json.get('nickname')
     password = request.json.get('password')
     type = request.json.get('type')
     if username is None or password is None:
@@ -171,7 +187,7 @@ def create_user():
     db.session.add(user)
     db.session.commit()
     #return jsonify({'username': map(make_public_user, user)}), 201
-    return jsonify({'id': user.id, 'username': user.username, 'type': user.type}), 201
+    return jsonify({'id': user.id, 'username': user.username, 'nickname': user.nickname, 'type': user.type}), 201
     # {'Location': url_for('get_user', id = user.id, _external = True)}
 
 
