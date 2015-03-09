@@ -310,7 +310,7 @@ def create_ques():
     if Comp.query.filter_by(id=comp_id).first() is None \
             or User.query.filter_by(id=user_id).first() is None:
         abort(400)
-    ques = Ques(comp_id=comp_id, user_id=user_id, title=title, content=content)
+    ques = Ques(comp_id=comp_id, time=datetime.now(), user_id=user_id, title=title, content=content)
     db.session.add(ques)
     db.session.commit()
     return jsonify({'id': ques.id,
@@ -397,7 +397,7 @@ def create_answer():
     if Ques.query.filter_by(id=ques_id).first() is None \
             or User.query.filter_by(id=user_id).first() is None:
         abort(400)
-    answer = Answer(ques_id=ques_id, user_id=user_id, number=number, content=content)
+    answer = Answer(ques_id=ques_id, time=datetime.now(), user_id=user_id, number=number, content=content)
     db.session.add(answer)
     db.session.commit()
     return jsonify({'id': answer.id,
