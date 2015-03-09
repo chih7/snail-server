@@ -6,7 +6,6 @@ import pymongo
 import bson.binary
 import bson.objectid
 import bson.errors
-import datetime
 import hashlib
 from flask import Flask
 from flask import jsonify
@@ -16,6 +15,7 @@ from flask import make_response
 from flask import request
 from flask import url_for
 from flask import g
+from datetime import datetime
 from cStringIO import StringIO
 from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
