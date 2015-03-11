@@ -80,6 +80,7 @@ class Ques(db.Model):
     comp_id = db.Column((db.String(64)))
     user_id = db.Column(db.Integer)
     time = db.Column(db.DateTime, default=datetime.now())
+    number = db.Column(db.Integer)
     title = db.Column((db.String(1024)))
     content = db.Column((db.String(2048)))
 
@@ -248,7 +249,8 @@ def get_ques(ques_id):
     return jsonify({'id': ques.id,
                     'comp_id': ques.comp_id,
                     'user_id': ques.user_id,
-                    'time': ques.time,
+                    'time': int(ques.time.strftime("%s")) * 1000,
+                    'number': ques.number,
                     'title': ques.title,
                     'content': ques.content})
 
@@ -267,7 +269,8 @@ def get_queses():
             'id': ques.id,
             'comp_id': ques.comp_id,
             'user_id': ques.user_id,
-            'time': ques.time,
+            'time': int(ques.time.strftime("%s")) * 1000,
+            'number': ques.number,
             'title': ques.title,
             'content': ques.content
         }
@@ -289,7 +292,8 @@ def get_comp_queses():
             'id': ques.id,
             'comp_id': ques.comp_id,
             'user_id': ques.user_id,
-            'time': ques.time,
+            'time': int(ques.time.strftime("%s")) * 1000,
+            'number': ques.number,
             'title': ques.title,
             'content': ques.content
         }
@@ -303,20 +307,22 @@ def get_comp_queses():
 def create_ques():
     comp_id = request.json.get('comp_id')
     user_id = request.json.get('user_id')
+    number = request.json.get('number')
     title = request.json.get('title')
     content = request.json.get('content')
-    if title is None or type is None:
+    if title is None or type is None or number is None:
         abort(400)
     if Comp.query.filter_by(id=comp_id).first() is None \
             or User.query.filter_by(id=user_id).first() is None:
         abort(400)
-    ques = Ques(comp_id=comp_id, time=datetime.now(), user_id=user_id, title=title, content=content)
+    ques = Ques(comp_id=comp_id, time=datetime.now(), user_id=user_id, number=number, title=title, content=content)
     db.session.add(ques)
     db.session.commit()
     return jsonify({'id': ques.id,
                     'comp_id': ques.comp_id,
                     'user_id': ques.user_id,
-                    'time': ques.time,
+                    'time': int(ques.time.strftime("%s")) * 1000,
+                    'number': ques.number,
                     'title': ques.title,
                     'content': ques.content})
 
@@ -335,7 +341,7 @@ def get_answer(answer_id):
     return jsonify({'id': answer.id,
                     'ques_id': answer.ques_id,
                     'user_id': answer.user_id,
-                    'time': answer.time,
+                    'time': int(answer.time.strftime("%s")) * 1000,
                     'number': answer.number,
                     'content': answer.content})
 
@@ -354,7 +360,7 @@ def get_answers():
             'id': answer.id,
             'ques_id': answer.ques_id,
             'user_id': answer.user_id,
-            'time': answer.time,
+            'time': int(answer.time.strftime("%s")) * 1000,
             'number': answer.number,
             'content': answer.content
         }
@@ -376,7 +382,7 @@ def get_ques_answers():
             'id': answer.id,
             'ques_id': answer.ques_id,
             'user_id': answer.user_id,
-            'time': answer.time,
+            'time': int(answer.time.strftime("%s")) * 1000,
             'number': answer.number,
             'content': answer.content
         }
@@ -403,7 +409,7 @@ def create_answer():
     return jsonify({'id': answer.id,
                     'ques_id': answer.ques_id,
                     'user_id': answer.user_id,
-                    'time': answer.time,
+                    'time': int(answer.time.strftime("%s")) * 1000,
                     'number': answer.number,
                     'content': answer.content})
 
