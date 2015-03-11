@@ -271,8 +271,7 @@ def get_queses():
             'user_id': ques.user_id,
             'time': int(ques.time.strftime("%s")) * 1000,
             'number': ques.number,
-            'title': ques.title,
-            'content': ques.content
+            'title': ques.title
         }
         queses.append(ques_item)
     return jsonify({'queses': queses})
@@ -294,8 +293,7 @@ def get_comp_queses():
             'user_id': ques.user_id,
             'time': int(ques.time.strftime("%s")) * 1000,
             'number': ques.number,
-            'title': ques.title,
-            'content': ques.content
+            'title': ques.title
         }
         queses.append(ques_item)
     return jsonify({'queses': queses})
