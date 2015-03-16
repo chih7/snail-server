@@ -23,14 +23,14 @@ from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 from PIL import Image
-
+from werkzeug.contrib.fixers import ProxyFix
 
 # initialization
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'watchaaaaaadog'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-
+app.wsgi_app = ProxyFix(app.wsgi_app)
 # text_factory = str
 # reload(sys)
 # sys.setdefaultencoding('utf8')
@@ -381,11 +381,23 @@ def create_ques():
 @auth.login_required
 def get_answer(answer_id):
     answer = Answer.query.get(answer_id)
+    user = User.query.get(answer.user_id)
+    ques = Ques.query.get(answer.ques_id)
     if not answer:
         abort(404)
     return jsonify({'id': answer.id,
                     'ques_id': answer.ques_id,
+                    'ques_type': ques.type,
+                    'ques_comp_id': ques.comp_id,
+                    'ques_number': ques.number,
+                    'ques_title': ques.title,
+                    'ques_time': ques.time,
+                    'ques_user_id': ques.user_id,
                     'user_id': answer.user_id,
+                    'user_name': user.username,
+                    'user_nickname': user.nickname,
+                    'user_pic': user.sha1,
+                    'user_type': user.type,
                     'time': int(answer.time.strftime("%s")) * 1000,
                     'number': answer.number,
                     'content': answer.content})
@@ -400,11 +412,22 @@ def get_answers():
         abort(404)
     for answer_id in range(1, answers_num + 1):
         answer = Answer.query.get(answer_id)
-
+        user = User.query.get(answer.user_id)
+        ques = Ques.query.get(answer.ques_id)
         answer_item = {
             'id': answer.id,
             'ques_id': answer.ques_id,
+            'ques_type': ques.type,
+            'ques_comp_id': ques.comp_id,
+            'ques_number': ques.number,
+            'ques_title': ques.title,
+            'ques_time': ques.time,
+            'ques_user_id': ques.user_id,
             'user_id': answer.user_id,
+            'user_name': user.username,
+            'user_nickname': user.nickname,
+            'user_pic': user.sha1,
+            'user_type': user.type,
             'time': int(answer.time.strftime("%s")) * 1000,
             'number': answer.number,
             'content': answer.content
@@ -423,10 +446,22 @@ def get_ques_answers():
         abort(404)
     answersfilter = Answer.query.filter_by(ques_id=ques_id)
     for answer in answersfilter:
+        user = User.query.get(answer.user_id)
+        ques = Ques.query.get(answer.ques_id)
         answer_item = {
             'id': answer.id,
             'ques_id': answer.ques_id,
+            'ques_type': ques.type,
+            'ques_comp_id': ques.comp_id,
+            'ques_number': ques.number,
+            'ques_title': ques.title,
+            'ques_time': ques.time,
+            'ques_user_id': ques.user_id,
             'user_id': answer.user_id,
+            'user_name': user.username,
+            'user_nickname': user.nickname,
+            'user_pic': user.sha1,
+            'user_type': user.type,
             'time': int(answer.time.strftime("%s")) * 1000,
             'number': answer.number,
             'content': answer.content
@@ -451,9 +486,21 @@ def create_answer():
     answer = Answer(ques_id=ques_id, time=datetime.now(), user_id=user_id, number=number, content=content)
     db.session.add(answer)
     db.session.commit()
+    user = User.query.get(answer.user_id)
+    ques = Ques.query.get(answer.ques_id)
     return jsonify({'id': answer.id,
                     'ques_id': answer.ques_id,
+                    'ques_type': ques.type,
+                    'ques_comp_id': ques.comp_id,
+                    'ques_number': ques.number,
+                    'ques_title': ques.title,
+                    'ques_time': ques.time,
+                    'ques_user_id': ques.user_id,
                     'user_id': answer.user_id,
+                    'user_name': user.username,
+                    'user_nickname': user.nickname,
+                    'user_pic': user.sha1,
+                    'user_type': user.type,
                     'time': int(answer.time.strftime("%s")) * 1000,
                     'number': answer.number,
                     'content': answer.content})
@@ -558,17 +605,17 @@ def upload():
     return jsonify({'sha1': sha1})
 
 
-# @app.route('/')
-# def index():
-#     return '''
-#     <!doctype html>
-#     <html>
-#     <body>
-#     <form action='/snail/api/v0.1/upload' method='post' enctype='multipart/form-data'>
-#          <input type='file' name='uploaded_file'>
-#          <input type='submit' value='Upload'>
-#     </form>
-#     '''
+@app.route('/')
+def index():
+    return '''
+    <!doctype html>
+    <html>
+    <body>
+    <form action='/snail/api/v0.1/upload' method='post' enctype='multipart/form-data'>
+         <input type='file' name='uploaded_file'>
+         <input type='submit' value='Upload'>
+    </form>
+    '''
 
 
 if __name__ == '__main__':
