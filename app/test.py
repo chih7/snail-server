@@ -257,11 +257,19 @@ def get_resource():
 @auth.login_required
 def get_ques(ques_id):
     ques = Ques.query.get(ques_id)
+    user = User.query.get(ques.user_id)
+    comp = Comp.query.get(ques.comp_id)
     if not ques:
         abort(404)
     return jsonify({'id': ques.id,
                     'comp_id': ques.comp_id,
+                    'comp_name': comp.name,
+                    'comp_type': comp.comp_type,
                     'user_id': ques.user_id,
+                    'user_name': user.username,
+                    'user_nickname': user.nickname,
+                    'user_pic': user.sha1,
+                    'user_type': user.type,
                     'time': int(ques.time.strftime("%s")) * 1000,
                     'number': ques.number,
                     'title': ques.title,
@@ -277,14 +285,22 @@ def get_queses():
         abort(404)
     for ques_id in range(1, queses_num + 1):
         ques = Ques.query.get(ques_id)
-
+        user = User.query.get(ques.user_id)
+        comp = Comp.query.get(ques.comp_id)
         ques_item = {
             'id': ques.id,
             'comp_id': ques.comp_id,
+            'comp_name': comp.name,
+            'comp_type': comp.comp_type,
             'user_id': ques.user_id,
+            'user_name': user.username,
+            'user_nickname': user.nickname,
+            'user_pic': user.sha1,
+            'user_type': user.type,
             'time': int(ques.time.strftime("%s")) * 1000,
             'number': ques.number,
-            'title': ques.title
+            'title': ques.title,
+            'content': ques.content
         }
         queses.append(ques_item)
     return jsonify({'queses': queses})
@@ -299,14 +315,24 @@ def get_comp_queses():
     if queses_num == 0:
         abort(404)
     quesfilter = Ques.query.filter_by(comp_id=comp_id)
+
     for ques in quesfilter:
+        user = User.query.get(ques.user_id)
+        comp = Comp.query.get(ques.comp_id)
         ques_item = {
             'id': ques.id,
             'comp_id': ques.comp_id,
+            'comp_name': comp.name,
+            'comp_type': comp.comp_type,
             'user_id': ques.user_id,
+            'user_name': user.username,
+            'user_nickname': user.nickname,
+            'user_pic': user.sha1,
+            'user_type': user.type,
             'time': int(ques.time.strftime("%s")) * 1000,
             'number': ques.number,
-            'title': ques.title
+            'title': ques.title,
+            'content': ques.content
         }
         queses.append(ques_item)
     return jsonify({'queses': queses})
@@ -329,9 +355,17 @@ def create_ques():
     ques = Ques(comp_id=comp_id, time=datetime.now(), user_id=user_id, number=number, title=title, content=content)
     db.session.add(ques)
     db.session.commit()
+    user = User.query.get(ques.user_id)
+    comp = Comp.query.get(ques.comp_id)
     return jsonify({'id': ques.id,
                     'comp_id': ques.comp_id,
+                    'comp_name': comp.name,
+                    'comp_type': comp.comp_type,
                     'user_id': ques.user_id,
+                    'user_name': user.username,
+                    'user_nickname': user.nickname,
+                    'user_pic': user.sha1,
+                    'user_type': user.type,
                     'time': int(ques.time.strftime("%s")) * 1000,
                     'number': ques.number,
                     'title': ques.title,
@@ -537,7 +571,7 @@ def upload():
 #     '''
 
 
-if __name__ == '__main__':
-    if not os.path.exists('db.sqlite'):
-        db.create_all()
-    app.run(debug=True, host='0.0.0.0', port=80)
+# if __name__ == '__main__':
+#     if not os.path.exists('db.sqlite'):
+#         db.create_all()
+#     app.run(debug=True, host='0.0.0.0', port=80)

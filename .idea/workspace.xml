@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="253e7990-756a-488a-b084-f3db3b12518c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/python2.7/site-packages/PIL/_imaging.so" afterPath="$PROJECT_DIR$/lib/python2.7/site-packages/PIL/_imaging.so" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/python2.7/site-packages/PIL/_imagingcms.so" afterPath="$PROJECT_DIR$/lib/python2.7/site-packages/PIL/_imagingcms.so" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/python2.7/site-packages/PIL/_imagingft.so" afterPath="$PROJECT_DIR$/lib/python2.7/site-packages/PIL/_imagingft.so" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/python2.7/site-packages/PIL/_imagingmath.so" afterPath="$PROJECT_DIR$/lib/python2.7/site-packages/PIL/_imagingmath.so" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/python2.7/site-packages/PIL/_imagingmorph.so" afterPath="$PROJECT_DIR$/lib/python2.7/site-packages/PIL/_imagingmorph.so" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/python2.7/site-packages/Pillow-2.7.0-py2.7.egg-info/installed-files.txt" afterPath="$PROJECT_DIR$/lib/python2.7/site-packages/Pillow-2.7.0-py2.7.egg-info/installed-files.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/python2.7/site-packages/Pillow-2.7.0-py2.7.egg-info/pbr.json" afterPath="$PROJECT_DIR$/lib/python2.7/site-packages/Pillow-2.7.0-py2.7.egg-info/pbr.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/test.py" afterPath="$PROJECT_DIR$/app/test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="flask.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -39,8 +30,8 @@
       <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.0344827" vertical-offset="2520" max-vertical-offset="8235">
-              <caret line="200" column="34" selection-start-line="200" selection-start-column="34" selection-end-line="200" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.5969828" vertical-offset="8033" max-vertical-offset="8745">
+              <caret line="554" column="13" selection-start-line="554" selection-start-column="13" selection-end-line="554" selection-end-column="13" />
               <folding>
                 <element signature="e#44#53#0" expanded="true" />
               </folding>
@@ -64,8 +55,8 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="177" />
-    <option name="y" value="244" />
+    <option name="x" value="245" />
+    <option name="y" value="420" />
     <option name="width" value="1033" />
     <option name="height" value="626" />
   </component>
@@ -385,7 +376,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="177" y="244" width="1033" height="626" extended-state="0" />
+    <frame x="245" y="420" width="1033" height="626" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32868525" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -433,8 +424,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.0344827" vertical-offset="2520" max-vertical-offset="8235">
-          <caret line="200" column="34" selection-start-line="200" selection-start-column="34" selection-end-line="200" selection-end-column="34" />
+        <state vertical-scroll-proportion="0.5969828" vertical-offset="8033" max-vertical-offset="8745">
+          <caret line="554" column="13" selection-start-line="554" selection-start-column="13" selection-end-line="554" selection-end-column="13" />
           <folding>
             <element signature="e#44#53#0" expanded="true" />
           </folding>
