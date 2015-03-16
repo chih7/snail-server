@@ -24,7 +24,7 @@ GET         |http://api.chih.me/snail/api/v0.1/comps              |检索所有�
 GET         |http://api.chih.me/snail/api/v0.1/comps/[id]         |检索单个公司 
 POST        |http://api.chih.me/snail/api/v0.1/comps              |上传公司
 POST        |http://api.chih.me/snail/api/v0.1/upload             |上传图片
-GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |上传图片
+GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |查看图片
 GET         |http://api.chih.me/snail/api/v0.1/answers            |检索所有答案
 GET         |http://api.chih.me/snail/api/v0.1/answers/[id]       |检索单个答案
 POST        |http://api.chih.me/snail/api/v0.1/answers            |上传答案
@@ -40,7 +40,7 @@ POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques|检索问题�
 
 ###用户注册
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","nickname":"查尔斯","password":"python","type":"student"}' http://api.chih.me/snail/api/v0.1/users
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","nickname":"查尔斯","password":"python","sha1":"xxxxxxxxxxxxx","type":"student"}' http://api.chih.me/snail/api/v0.1/users
     
 通过`POST` 传送`json` （数据类型待完善）(通过已有密码或token保护)
 
@@ -74,7 +74,7 @@ POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques|检索问题�
 
 ###问题上传
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1","user_id":"1","number":"3","title":"test","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/queses
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1","user_id":"1","number":"3","sha1":"xxxxxxxxxxxxx","title":"test","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/queses
 注意：问题类型为`已存在`的公司类型
 
 ###获取所有问题信息
@@ -105,7 +105,7 @@ POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques|检索问题�
 
 ###上传答案
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"ques_id":"5","user_id":"4","number":"3","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/answers
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"ques_id":"5","user_id":"4","number":"3","sha1":"xxxxxxxxxxxxx","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/answers
 
 ques_id,user_id必须已经存在
 

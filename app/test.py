@@ -84,7 +84,7 @@ class Ques(db.Model):
     number = db.Column(db.Integer)
     title = db.Column((db.String(1024)))
     content = db.Column((db.String(2048)))
-    # sha1 = db.Column(db.String(256))
+    sha1 = db.Column(db.String(256))
 
 
 class Answer(db.Model):
@@ -95,7 +95,7 @@ class Answer(db.Model):
     time = db.Column(db.DateTime, default=datetime.now())
     number = db.Column(db.Integer)
     content = db.Column((db.String(4096)))
-    # sha1 = db.Column(db.String(256))
+    sha1 = db.Column(db.String(256))
 
 
 class Comp(db.Model):
@@ -273,6 +273,7 @@ def get_ques(ques_id):
                     'time': int(ques.time.strftime("%s")) * 1000,
                     'number': ques.number,
                     'title': ques.title,
+                    'sha1': ques.sha1,
                     'content': ques.content})
 
 
@@ -300,6 +301,7 @@ def get_queses():
             'time': int(ques.time.strftime("%s")) * 1000,
             'number': ques.number,
             'title': ques.title,
+            'sha1': ques.sha1,
             'content': ques.content
         }
         queses.append(ques_item)
@@ -332,6 +334,7 @@ def get_comp_queses():
             'time': int(ques.time.strftime("%s")) * 1000,
             'number': ques.number,
             'title': ques.title,
+            'sha1': ques.sha1,
             'content': ques.content
         }
         queses.append(ques_item)
@@ -346,13 +349,22 @@ def create_ques():
     user_id = request.json.get('user_id')
     number = request.json.get('number')
     title = request.json.get('title')
+    sha1 = request.json.get('sha1')
     content = request.json.get('content')
     if title is None or type is None or number is None:
         abort(400)
     if Comp.query.filter_by(id=comp_id).first() is None \
             or User.query.filter_by(id=user_id).first() is None:
         abort(400)
-    ques = Ques(comp_id=comp_id, time=datetime.now(), user_id=user_id, number=number, title=title, content=content)
+
+    ques = Ques(comp_id=comp_id,
+                time=datetime.now(),
+                user_id=user_id,
+                number=number,
+                title=title,
+                sha1=sha1,
+                content=content)
+
     db.session.add(ques)
     db.session.commit()
     user = User.query.get(ques.user_id)
@@ -369,6 +381,7 @@ def create_ques():
                     'time': int(ques.time.strftime("%s")) * 1000,
                     'number': ques.number,
                     'title': ques.title,
+                    'sha1': ques.sha1,
                     'content': ques.content})
 
 
@@ -400,6 +413,7 @@ def get_answer(answer_id):
                     'user_type': user.type,
                     'time': int(answer.time.strftime("%s")) * 1000,
                     'number': answer.number,
+                    'sha1': answer.sha1,
                     'content': answer.content})
 
 
@@ -430,6 +444,7 @@ def get_answers():
             'user_type': user.type,
             'time': int(answer.time.strftime("%s")) * 1000,
             'number': answer.number,
+            'sha1': answer.sha1,
             'content': answer.content
         }
         answers.append(answer_item)
@@ -464,6 +479,7 @@ def get_ques_answers():
             'user_type': user.type,
             'time': int(answer.time.strftime("%s")) * 1000,
             'number': answer.number,
+            'sha1': answer.sha1,
             'content': answer.content
         }
         answers.append(answer_item)
@@ -478,12 +494,18 @@ def create_answer():
     user_id = request.json.get('user_id')
     number = request.json.get('number')
     content = request.json.get('content')
+    sha1 = request.json.get('sha1')
     if number is None:
         abort(400)
     if Ques.query.filter_by(id=ques_id).first() is None \
             or User.query.filter_by(id=user_id).first() is None:
         abort(400)
-    answer = Answer(ques_id=ques_id, time=datetime.now(), user_id=user_id, number=number, content=content)
+    answer = Answer(ques_id=ques_id,
+                    time=datetime.now(),
+                    user_id=user_id,
+                    number=number,
+                    sha1=sha1,
+                    content=content)
     db.session.add(answer)
     db.session.commit()
     user = User.query.get(answer.user_id)
@@ -503,6 +525,7 @@ def create_answer():
                     'user_type': user.type,
                     'time': int(answer.time.strftime("%s")) * 1000,
                     'number': answer.number,
+                    'sha1': answer.sha1,
                     'content': answer.content})
 
 
@@ -621,4 +644,4 @@ def index():
 if __name__ == '__main__':
     if not os.path.exists('db.sqlite'):
         db.create_all()
-    app.run(debug=True, port=8000)
+    app.run(debug=True,  port=8000)
