@@ -49,6 +49,7 @@ class User(db.Model):
     nickname = db.Column((db.String(64)))
     password_hash = db.Column((db.String(64)))
     type = db.Column((db.String(64)))
+    sha1 = db.Column(db.String(256))
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
@@ -83,6 +84,7 @@ class Ques(db.Model):
     number = db.Column(db.Integer)
     title = db.Column((db.String(1024)))
     content = db.Column((db.String(2048)))
+    # sha1 = db.Column(db.String(256))
 
 
 class Answer(db.Model):
@@ -93,6 +95,7 @@ class Answer(db.Model):
     time = db.Column(db.DateTime, default=datetime.now())
     number = db.Column(db.Integer)
     content = db.Column((db.String(4096)))
+    # sha1 = db.Column(db.String(256))
 
 
 class Comp(db.Model):
@@ -156,7 +159,8 @@ def get_users():
             'id': user.id,
             'username': user.username,
             'nickname': user.nickname,
-            'type': user.type
+            'type': user.type,
+            'sha1': user.sha1
         }
         users.append(user_item)
     return jsonify({'users': users})
@@ -169,7 +173,11 @@ def get_user(user_id):
     user = User.query.get(user_id)
     if not user:
         abort(400)
-    return jsonify({'id': user.id, 'username': user.username, 'nickname': user.nickname, 'type': user.type})
+    return jsonify({'id': user.id,
+                    'username': user.username,
+                    'nickname': user.nickname,
+                    'type': user.type,
+                    'sha1': user.sha1})
     # return jsonify(user)
 
 
@@ -180,16 +188,21 @@ def create_user():
     nickname = request.json.get('nickname')
     password = request.json.get('password')
     type = request.json.get('type')
+    sha1 = request.json.get('sha1')
     if username is None or password is None:
         abort(400)
     if User.query.filter_by(username=username).first() is not None:  # exsiting user
         abort(400)
-    user = User(username=username, nickname=nickname, type=type)
+    user = User(username=username, nickname=nickname, type=type, sha1=sha1)
     user.hash_password(password)
     db.session.add(user)
     db.session.commit()
     # return jsonify({'username': map(make_public_user, user)}), 201
-    return jsonify({'id': user.id, 'username': user.username, 'nickname': user.nickname, 'type': user.type}), 201
+    return jsonify({'id': user.id,
+                    'username': user.username,
+                    'nickname': user.nickname,
+                    'type': user.type,
+                    'sha1': user.sha1}), 201
     # {'Location': url_for('get_user', id = user.id, _external = True)}
 
 
