@@ -52,7 +52,7 @@ POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques|检索问题�
 
 ###获取单个用户信息
 
-    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/users/1
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/users/username
 
 ###密码认证
 
