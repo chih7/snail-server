@@ -594,7 +594,7 @@ def save_file(f):
     c = dict(
         content=bson.binary.Binary(content.getvalue()),
         mime=mime,
-        time=datetime.datetime.utcnow(),
+        time=datetime.utcnow(),
         sha1=sha1,
     )
     try:
