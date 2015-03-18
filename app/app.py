@@ -166,11 +166,11 @@ def get_users():
     return jsonify({'users': users})
 
 
-@app.route('/snail/api/v0.1/users/<username>', methods=['GET'])
+@app.route('/snail/api/v0.1/users/<string:username>', methods=['GET'])
 @auth.login_required
 def get_user(username):
     # user = filter(lambda t: t['id'] == user_id, users)
-    user = User.query.get(username)
+    user = User.query.filter_by(username=username).first()
     if not user:
         abort(400)
     return jsonify({'id': user.id,
