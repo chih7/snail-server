@@ -174,7 +174,7 @@ def get_user(username):
     if not user:
         abort(400)
     return jsonify({'id': user.id,
-                    'username': unicode(user.username),
+                    'username': user.username,
                     'nickname': user.nickname,
                     'type': user.type,
                     'sha1': user.sha1})
@@ -261,6 +261,7 @@ def get_ques(ques_id):
     comp = Comp.query.get(ques.comp_id)
     if not ques:
         abort(404)
+    answer_num = Answer.query.filter_by(ques_id=ques_id).count()
     return jsonify({'id': ques.id,
                     'comp_id': ques.comp_id,
                     'comp_name': comp.name,
@@ -271,7 +272,7 @@ def get_ques(ques_id):
                     'user_pic': user.sha1,
                     'user_type': user.type,
                     'time': int(ques.time.strftime("%s")) * 1000,
-                    'number': ques.number,
+                    'number': answer_num,
                     'title': ques.title,
                     'sha1': ques.sha1,
                     'content': ques.content})
@@ -288,6 +289,7 @@ def get_queses():
         ques = Ques.query.get(ques_id)
         user = User.query.get(ques.user_id)
         comp = Comp.query.get(ques.comp_id)
+        answer_num = Answer.query.filter_by(ques_id=ques_id).count()
         ques_item = {
             'id': ques.id,
             'comp_id': ques.comp_id,
@@ -299,7 +301,7 @@ def get_queses():
             'user_pic': user.sha1,
             'user_type': user.type,
             'time': int(ques.time.strftime("%s")) * 1000,
-            'number': ques.number,
+            'number': answer_num,
             'title': ques.title,
             'sha1': ques.sha1,
             'content': ques.content
@@ -321,6 +323,7 @@ def get_comp_queses():
     for ques in quesfilter:
         user = User.query.get(ques.user_id)
         comp = Comp.query.get(ques.comp_id)
+        answer_num = Answer.query.filter_by(ques_id=ques.id).count()
         ques_item = {
             'id': ques.id,
             'comp_id': ques.comp_id,
@@ -332,7 +335,7 @@ def get_comp_queses():
             'user_pic': user.sha1,
             'user_type': user.type,
             'time': int(ques.time.strftime("%s")) * 1000,
-            'number': ques.number,
+            'number': answer_num,
             'title': ques.title,
             'sha1': ques.sha1,
             'content': ques.content
@@ -347,11 +350,11 @@ def get_comp_queses():
 def create_ques():
     comp_id = request.json.get('comp_id')
     user_id = request.json.get('user_id')
-    number = request.json.get('number')
+    # number = request.json.get('number')
     title = request.json.get('title')
     sha1 = request.json.get('sha1')
     content = request.json.get('content')
-    if title is None or type is None or number is None:
+    if title is None or type is None:
         abort(400)
     if Comp.query.filter_by(id=comp_id).first() is None \
             or User.query.filter_by(id=user_id).first() is None:
@@ -360,7 +363,7 @@ def create_ques():
     ques = Ques(comp_id=comp_id,
                 time=datetime.now(),
                 user_id=user_id,
-                number=number,
+                number=0,
                 title=title,
                 sha1=sha1,
                 content=content)
@@ -379,7 +382,7 @@ def create_ques():
                     'user_pic': user.sha1,
                     'user_type': user.type,
                     'time': int(ques.time.strftime("%s")) * 1000,
-                    'number': ques.number,
+                    'number': 0,
                     'title': ques.title,
                     'sha1': ques.sha1,
                     'content': ques.content})
