@@ -20,7 +20,10 @@
   <component name="ProjectModuleManager">
     <modules />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 2.7.9 virtualenv at ~/flask" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 2.7.9 virtualenv at ~/flask (1)" project-jdk-type="Python SDK" />
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="/usr/bin/python2" />
+  </component>
   <component name="RunManager">
     <list size="0" />
   </component>

@@ -174,7 +174,7 @@ def get_user(username):
     if not user:
         abort(400)
     return jsonify({'id': user.id,
-                    'username': user.username,
+                    'username': unicode(user.username),
                     'nickname': user.nickname,
                     'type': user.type,
                     'sha1': user.sha1})
