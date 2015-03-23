@@ -153,7 +153,7 @@ ques_id,user_id必须已经存在
 
 ###上传实习
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"title":"title","office":"职位","type":"type","comp_id":"comp_id","com_size":"com_size","addr":"addr","money":"money","ask":"要求","duty":"职责"}' http://api.chih.me/snail/api/v0.1/practices
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"title":"title","office":"职位","type":"type","comp_id":"comp_id","comp_size":"comp_size","addr":"addr","money":"money","ask":"要求","duty":"职责"}' http://api.chih.me/snail/api/v0.1/practices
 
 comp_id必须已经存在
 

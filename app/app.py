@@ -605,7 +605,7 @@ def get_practice(practice_id):
     if not practice:
         abort(404)
     return jsonify({'id': practice.id,
-                    'title': practice.ques_id,
+                    'title': practice.title,
                     'office': practice.office,
                     'time': int(practice.time.strftime("%s")) * 1000,
                     'type': practice.type,
@@ -631,7 +631,7 @@ def get_practices():
         comp = Comp.query.get(practice.comp_id)
         practice_item = {
             'id': practice.id,
-            'title': practice.ques_id,
+            'title': practice.title,
             'office': practice.office,
             'time': int(practice.time.strftime("%s")) * 1000,
             'type': practice.type,
@@ -661,7 +661,7 @@ def get_ques_practices():
         comp = Comp.query.get(practice.comp_id)
         practice_item = {
             'id': practice.id,
-            'title': practice.ques_id,
+            'title': practice.title,
             'office': practice.office,
             'time': int(practice.time.strftime("%s")) * 1000,
             'type': practice.type,
@@ -686,7 +686,7 @@ def create_practice():
     office = request.json.get('office')
     type = request.json.get('type')
     comp_id = request.json.get('comp_id')
-    com_size = request.json.get('com_size')
+    comp_size = request.json.get('comp_size')
     addr = request.json.get('addr')
     ask = request.json.get('ask')
     money = request.json.get('money')
@@ -700,7 +700,7 @@ def create_practice():
                         office=office,
                         type=type,
                         comp_id=comp_id,
-                        com_size=com_size,
+                        comp_size=comp_size,
                         addr=addr,
                         ask=ask,
                         money=money,
@@ -709,7 +709,7 @@ def create_practice():
     db.session.commit()
     comp = Comp.query.get(practice.comp_id)
     return jsonify({'id': practice.id,
-                    'title': practice.ques_id,
+                    'title': practice.title,
                     'office': practice.office,
                     'time': int(practice.time.strftime("%s")) * 1000,
                     'type': practice.type,
