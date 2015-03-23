@@ -29,13 +29,19 @@ GET         |http://api.chih.me/snail/api/v0.1/answers            |检索所有�
 GET         |http://api.chih.me/snail/api/v0.1/answers/[id]       |检索单个答案
 POST        |http://api.chih.me/snail/api/v0.1/answers            |上传答案
 POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques|检索问题下的答案
+GET         |http://api.chih.me/snail/api/v0.1/practices          |检索所有实习
+GET         |http://api.chih.me/snail/api/v0.1/practice/[id]      |检索单个实习
+POST        |http://api.chih.me/snail/api/v0.1/practices          |上传实习
+POST        |http://api.chih.me/snail/snail/api/v0.1/practicesofcomp|检索公司下的实习
 
 ##API调用说明
 
 服务端已经部署，地址为 
     
     api.chih.me
-    
+
+
+用户与认证    
 ---
 
 ###用户注册
@@ -70,6 +76,7 @@ POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques|检索问题�
 
 指定用户为token，密码为空获取资源，token有有效期，为十分钟
 
+问题
 ---
 
 ###问题上传
@@ -91,6 +98,7 @@ POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques|检索问题�
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1"}' http://api.chih.me/snail/api/v0.1/quesesofcomp
 
+答案
 ---
 
 ###检索所有答案
@@ -113,6 +121,7 @@ ques_id,user_id必须已经存在
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"ques_id":"1"}' http://api.chih.me/snail/api/v0.1/answersofques
 
+公司
 ---
 
 ###公司信息上传
@@ -129,6 +138,30 @@ ques_id,user_id必须已经存在
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/comps/1
 
+实习
+---
+
+###检索所有实习
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/practices
+
+
+###检索单个实习
+
+    $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/practice/1
+
+
+###上传实习
+
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"title":"title","office":"职位","type":"type","comp_id":"comp_id","com_size":"com_size","addr":"addr","money":"money","ask":"要求","duty":"职责"}' http://api.chih.me/snail/api/v0.1/practices
+
+comp_id必须已经存在
+
+###检索公司下的实习
+
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1"}' http://api.chih.me/snail/api/v0.1/practicesofcomp
+
+图片
 ---
 
 ###上传图片

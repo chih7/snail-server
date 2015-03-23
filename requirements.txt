@@ -1,0 +1,12 @@
+pymongo
+bson
+hashlib
+flask
+datetime
+cStringIO
+flask_httpauth
+flask_sqlalchemy
+passlib
+itsdangerous
+PIL
+werkzeug

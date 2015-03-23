@@ -105,6 +105,22 @@ class Comp(db.Model):
     name = db.Column((db.String(64)))
 
 
+class Practice(db.Model):
+    __tablename__ = 'practice'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column((db.String(1024)))
+    office = db.Column(db.String(64))
+    time = db.Column(db.DateTime, default=datetime.now())
+    type = db.Column((db.String(64)))
+    comp_id = db.Column((db.String(64)))
+    comp_size = db.Column((db.String(64)))
+    addr = db.Column((db.String(2048)))
+    money = db.Column((db.String(1024)))
+    ask = db.Column((db.String(4096)))
+    duty = db.Column((db.String(4096)))
+
+
+
 def make_public_user(user):
     new_user = {}
     for field in user:
@@ -261,7 +277,7 @@ def get_ques(ques_id):
     comp = Comp.query.get(ques.comp_id)
     if not ques:
         abort(404)
-    answer_num = Answer.query.filter_by(ques_id=ques_id).count()
+    answer_num = Practice.query.filter_by(ques_id=ques_id).count()
     return jsonify({'id': ques.id,
                     'comp_id': ques.comp_id,
                     'comp_name': comp.name,
@@ -575,6 +591,136 @@ def create_comps():
     db.session.add(comp)
     db.session.commit()
     return jsonify({'id': comp.id, 'type': comp.comp_type, 'name': comp.name}), 201
+
+
+#=======================================================================================
+#Practice
+
+
+@app.route('/snail/api/v0.1/practice/<int:practice_id>', methods=['GET'])
+@auth.login_required
+def get_practice(practice_id):
+    practice = Practice.query.get(practice_id)
+    comp = Comp.query.get(practice.comp_id)
+    if not practice:
+        abort(404)
+    return jsonify({'id': practice.id,
+                    'title': practice.ques_id,
+                    'office': practice.office,
+                    'time': int(practice.time.strftime("%s")) * 1000,
+                    'type': practice.type,
+                    'comp_id': practice.comp_id,
+                    'comp_size': practice.comp_size,
+                    'comp_name': comp.name,
+                    'comp_type': comp.comp_type,
+                    'addr': practice.addr,
+                    'money': practice.money,
+                    'ask': practice.ask,
+                    'duty': practice.duty})
+
+
+@app.route('/snail/api/v0.1/practices', methods=['GET'])
+@auth.login_required
+def get_practices():
+    practices_num = Practice.query.count()
+    practices = []
+    if practices_num == 0:
+        abort(404)
+    for practice_id in range(1, practices_num + 1):
+        practice = Practice.query.get(practice_id)
+        comp = Comp.query.get(practice.comp_id)
+        practice_item = {
+            'id': practice.id,
+            'title': practice.ques_id,
+            'office': practice.office,
+            'time': int(practice.time.strftime("%s")) * 1000,
+            'type': practice.type,
+            'comp_id': practice.comp_id,
+            'comp_size': practice.comp_size,
+            'comp_name': comp.name,
+            'comp_type': comp.comp_type,
+            'addr': practice.addr,
+            'money': practice.money,
+            'ask': practice.ask,
+            'duty': practice.duty
+        }
+        practices.append(practice_item)
+    return jsonify({'practices': practices})
+
+
+@app.route('/snail/api/v0.1/practicesofcomp', methods=['POST'])
+@auth.login_required
+def get_ques_practices():
+    comp_id = request.json.get('comp_id')
+    practices_num = Practice.query.filter_by(comp_id=comp_id).count()
+    practices = []
+    if practices_num == 0:
+        abort(404)
+    practicesfilter = Practice.query.filter_by(comp_id=comp_id)
+    for practice in practicesfilter:
+        comp = Comp.query.get(practice.comp_id)
+        practice_item = {
+            'id': practice.id,
+            'title': practice.ques_id,
+            'office': practice.office,
+            'time': int(practice.time.strftime("%s")) * 1000,
+            'type': practice.type,
+            'comp_id': practice.comp_id,
+            'comp_size': practice.comp_size,
+            'comp_name': comp.name,
+            'comp_type': comp.comp_type,
+            'addr': practice.addr,
+            'money': practice.money,
+            'ask': practice.ask,
+            'duty': practice.duty
+        }
+        practices.append(practice_item)
+    return jsonify({'practices': practices})
+    # return jsonify({'num': practices_num})
+
+
+@app.route('/snail/api/v0.1/practices', methods=['POST'])
+@auth.login_required
+def create_practice():
+    title = request.json.get('title')
+    office = request.json.get('office')
+    type = request.json.get('type')
+    comp_id = request.json.get('comp_id')
+    com_size = request.json.get('com_size')
+    addr = request.json.get('addr')
+    ask = request.json.get('ask')
+    money = request.json.get('money')
+    duty = request.json.get('duty')
+    if title is None or office is None or ask is None or duty is None:
+        abort(400)
+    if Comp.query.filter_by(id=comp_id).first() is None:
+        abort(400)
+    practice = Practice(title=title,
+                        time=datetime.now(),
+                        office=office,
+                        type=type,
+                        comp_id=comp_id,
+                        com_size=com_size,
+                        addr=addr,
+                        ask=ask,
+                        money=money,
+                        duty=duty)
+    db.session.add(practice)
+    db.session.commit()
+    comp = Comp.query.get(practice.comp_id)
+    return jsonify({'id': practice.id,
+                    'title': practice.ques_id,
+                    'office': practice.office,
+                    'time': int(practice.time.strftime("%s")) * 1000,
+                    'type': practice.type,
+                    'comp_id': practice.comp_id,
+                    'comp_size': practice.comp_size,
+                    'comp_name': comp.name,
+                    'comp_type': comp.comp_type,
+                    'addr': practice.addr,
+                    'money': practice.money,
+                    'ask': practice.ask,
+                    'duty': practice.duty})
 
 
 #============================================================================================
