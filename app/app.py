@@ -277,7 +277,7 @@ def get_ques(ques_id):
     comp = Comp.query.get(ques.comp_id)
     if not ques:
         abort(404)
-    answer_num = Ques.query.filter_by(ques_id=ques_id).count()
+    answer_num = Answer.query.filter_by(ques_id=ques_id).count()
     return jsonify({'id': ques.id,
                     'comp_id': ques.comp_id,
                     'comp_name': comp.name,
