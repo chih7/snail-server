@@ -500,8 +500,7 @@ def get_ques_answers_new():
             'content': answer.content
         }
         answers.append(answer_item)
-    return jsonify({'answers': answers})
-    # return jsonify({'num': answers_num})
+    return jsonify({'answers': answers.sort(reverse=True)})
 
 
 @app.route('/snail/api/v0.1/answersofques_hot', methods=['POST'])

@@ -28,7 +28,8 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |查看图片
 GET         |http://api.chih.me/snail/api/v0.1/answers            |检索所有答案
 GET         |http://api.chih.me/snail/api/v0.1/answers/[id]       |检索单个答案
 POST        |http://api.chih.me/snail/api/v0.1/answers            |上传答案
-POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques|检索问题下的答案
+POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques_new|检索问题下的答案(时间)
+POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques_hot|检索问题下的答案（点赞）
 GET         |http://api.chih.me/snail/api/v0.1/practices          |检索所有实习
 GET         |http://api.chih.me/snail/api/v0.1/practice/[id]      |检索单个实习
 POST        |http://api.chih.me/snail/api/v0.1/practices          |上传实习
@@ -119,7 +120,7 @@ ques_id,user_id必须已经存在
 
 ###检索问题下的答案
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"ques_id":"1"}' http://api.chih.me/snail/api/v0.1/answersofques
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"ques_id":"1"}' http://api.chih.me/snail/api/v0.1/answersofques_[hot|new]
 
 公司
 ---
