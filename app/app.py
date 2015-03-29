@@ -472,7 +472,7 @@ def get_answers():
 
 @app.route('/snail/api/v0.1/answersofques_new', methods=['POST'])
 @auth.login_required
-def get_ques_answers():
+def get_ques_answers_new():
     ques_id = request.json.get('ques_id')
     answers_num = Answer.query.filter_by(ques_id=ques_id).count()
     answers = []
@@ -505,9 +505,10 @@ def get_ques_answers():
     return jsonify({'answers': answers})
     # return jsonify({'num': answers_num})
 
+
 @app.route('/snail/api/v0.1/answersofques_hot', methods=['POST'])
 @auth.login_required
-def get_ques_answers():
+def get_ques_answers_hot():
     ques_id = request.json.get('ques_id')
     answers_num = Answer.query.filter_by(ques_id=ques_id).count()
     answers = []
