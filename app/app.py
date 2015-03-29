@@ -470,14 +470,14 @@ def get_answers():
     return jsonify({'answers': answers})
 
 
-@app.route('/snail/api/v0.1/answersofques', methods=['POST'])
+@app.route('/snail/api/v0.1/answersofques_new', methods=['POST'])
 @auth.login_required
 def get_ques_answers():
     ques_id = request.json.get('ques_id')
     answers_num = Answer.query.filter_by(ques_id=ques_id).count()
     answers = []
     if answers_num == 0:
-        abort(404)
+        return jsonify({'answers': 'null'})
     answersfilter = Answer.query.filter_by(ques_id=ques_id)
     for answer in answersfilter:
         user = User.query.get(answer.user_id)
@@ -505,6 +505,42 @@ def get_ques_answers():
     return jsonify({'answers': answers})
     # return jsonify({'num': answers_num})
 
+@app.route('/snail/api/v0.1/answersofques_hot', methods=['POST'])
+@auth.login_required
+def get_ques_answers():
+    ques_id = request.json.get('ques_id')
+    answers_num = Answer.query.filter_by(ques_id=ques_id).count()
+    answers = []
+    if answers_num == 0:
+        return jsonify({'answers': 'null'})
+    answersfilter = Answer.query.filter_by(ques_id=ques_id)
+    for answer in answersfilter:
+        user = User.query.get(answer.user_id)
+        ques = Ques.query.get(answer.ques_id)
+        answer_item = {
+            'id': answer.id,
+            'ques_id': answer.ques_id,
+            'ques_type': ques.type,
+            'ques_comp_id': ques.comp_id,
+            'ques_number': ques.number,
+            'ques_title': ques.title,
+            'ques_time': ques.time,
+            'ques_user_id': ques.user_id,
+            'user_id': answer.user_id,
+            'user_name': user.username,
+            'user_nickname': user.nickname,
+            'user_pic': user.sha1,
+            'user_type': user.type,
+            'time': int(answer.time.strftime("%s")) * 1000,
+            'number': answer.number,
+            'sha1': answer.sha1,
+            'content': answer.content
+        }
+        answers.append(answer_item)
+        def number(s):
+            return s['number']
+    return jsonify({'answers': answers.sorted(key=number)})
+    # return jsonify({'num': answers_num})
 
 @app.route('/snail/api/v0.1/answers', methods=['POST'])
 @auth.login_required
