@@ -30,8 +30,8 @@
       <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8014354" vertical-offset="7795" max-vertical-offset="12585">
-              <caret line="542" column="43" selection-start-line="542" selection-start-column="43" selection-end-line="542" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.5502392" vertical-offset="7750" max-vertical-offset="12525">
+              <caret line="532" column="59" selection-start-line="532" selection-start-column="59" selection-end-line="532" selection-end-column="59" />
               <folding>
                 <element signature="e#44#53#0" expanded="true" />
               </folding>
@@ -80,8 +80,8 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="181" />
-    <option name="y" value="380" />
+    <option name="x" value="148" />
+    <option name="y" value="367" />
     <option name="width" value="960" />
     <option name="height" value="580" />
   </component>
@@ -434,7 +434,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="181" y="380" width="960" height="580" extended-state="0" />
+    <frame x="148" y="367" width="960" height="580" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -724,8 +724,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8014354" vertical-offset="7795" max-vertical-offset="12585">
-          <caret line="542" column="43" selection-start-line="542" selection-start-column="43" selection-end-line="542" selection-end-column="43" />
+        <state vertical-scroll-proportion="0.5502392" vertical-offset="7750" max-vertical-offset="12525">
+          <caret line="532" column="59" selection-start-line="532" selection-start-column="59" selection-end-line="532" selection-end-column="59" />
           <folding>
             <element signature="e#44#53#0" expanded="true" />
           </folding>

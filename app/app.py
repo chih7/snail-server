@@ -120,7 +120,6 @@ class Practice(db.Model):
     duty = db.Column((db.String(4096)))
 
 
-
 def make_public_user(user):
     new_user = {}
     for field in user:
@@ -227,8 +226,8 @@ def create_user():
 # def update_user(user_id):
 # user = User.query.get(user_id)
 # if not user:
-#         abort(404)
-#     if not request.json:
+# abort(404)
+# if not request.json:
 #         abort(400)
 #     if 'username' in request.json and type(request.json['namename']) != unicode:
 #         abort(400)
@@ -404,7 +403,6 @@ def create_ques():
                     'content': ques.content})
 
 
-
 #=======================================================================================
 #answer
 
@@ -538,10 +536,8 @@ def get_ques_answers_hot():
             'content': answer.content
         }
         answers.append(answer_item)
-        def number(s):
-            return s['number']
-    return jsonify({'answers': answers.sort(key=number)})
-    # return jsonify({'num': answers_num})
+    return jsonify({'answers': sorted(answers, key=lambda x: x['number'])})
+
 
 @app.route('/snail/api/v0.1/answers', methods=['POST'])
 @auth.login_required
@@ -830,4 +826,4 @@ def index():
 if __name__ == '__main__':
     if not os.path.exists('db.sqlite'):
         db.create_all()
-    app.run(debug=True,  port=8000)
+    app.run(debug=True, port=8000)
