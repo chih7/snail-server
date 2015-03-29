@@ -540,7 +540,7 @@ def get_ques_answers_hot():
         answers.append(answer_item)
         def number(s):
             return s['number']
-    return jsonify({'answers': answers.sorted(key=number)})
+    return jsonify({'answers': answers.sort(key=number)})
     # return jsonify({'num': answers_num})
 
 @app.route('/snail/api/v0.1/answers', methods=['POST'])
