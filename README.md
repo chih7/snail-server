@@ -9,7 +9,7 @@
 HTTP方法    |URI                                                  |动作           
  ---------- |-----------------------------------------------------|------------- 
 GET         |http://api.chih.me/snail/api/v0.1/users              |检索所有用户
-GET         |http://api.chih.me/snail/api/v0.1/users/[id]         |检索单个用户
+GET         |http://api.chih.me/snail/api/v0.1/users/[username]   |检索单个用户
 POST        |http://api.chih.me/snail/api/v0.1/users              |创建新用户 
 PUT         |http://api.chih.me/snail/api/v0.1/users/[id]         |更新用户信息
 DELETE      |http://api.chih.me/snail/api/v0.1/users/[id]         |删除用户
@@ -19,7 +19,8 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |获取图片
 GET         |http://api.chih.me/snail/api/v0.1/queses             |检索所有问题
 GET         |http://api.chih.me/snail/api/v0.1/queses/[id]        |检索单个问题
 POST        |http://api.chih.me/snail/api/v0.1/queses             |上传问题
-POST        |http://api.chih.me/snail/snail/api/v0.1/quesesofcomp |检索公司下的问题
+POST        |http://api.chih.me/snail/snail/api/v0.1/quesesofcomp_new |检索公司下的问题（时间）
+POST        |http://api.chih.me/snail/snail/api/v0.1/quesesofcomp_hot |检索公司下的问题（问题数）
 GET         |http://api.chih.me/snail/api/v0.1/comps              |检索所有公司 
 GET         |http://api.chih.me/snail/api/v0.1/comps/[id]         |检索单个公司 
 POST        |http://api.chih.me/snail/api/v0.1/comps              |上传公司
@@ -47,7 +48,7 @@ POST        |http://api.chih.me/snail/snail/api/v0.1/practicesofcomp|检索公�
 
 ###用户注册
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","nickname":"查尔斯","password":"python","sha1":"xxxxxxxxxxxxx","type":"student"}' http://api.chih.me/snail/api/v0.1/users
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","nickname":"查尔斯","password":"python","sha1":"xxxxxxxxxxxxx","type":"student", "about":"who am I"}' http://api.chih.me/snail/api/v0.1/users
     
 通过`POST` 传送`json` （数据类型待完善）(通过已有密码或token保护)
 
@@ -97,7 +98,7 @@ POST        |http://api.chih.me/snail/snail/api/v0.1/practicesofcomp|检索公�
     
 ###检索公司下的问题
 
-    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1"}' http://api.chih.me/snail/api/v0.1/quesesofcomp
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1"}' http://api.chih.me/snail/api/v0.1/quesesofcomp_[hot|new]
 
 答案
 ---

@@ -50,6 +50,7 @@ class User(db.Model):
     password_hash = db.Column((db.String(64)))
     type = db.Column((db.String(64)))
     sha1 = db.Column(db.String(256))
+    about = db.Column(db.String(2048))
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
@@ -175,7 +176,8 @@ def get_users():
             'username': user.username,
             'nickname': user.nickname,
             'type': user.type,
-            'sha1': user.sha1
+            'sha1': user.sha1,
+            'about': user.about
         }
         users.append(user_item)
     return jsonify({'users': users})
@@ -192,8 +194,8 @@ def get_user(username):
                     'username': user.username,
                     'nickname': user.nickname,
                     'type': user.type,
-                    'sha1': user.sha1})
-    # return jsonify(user)
+                    'sha1': user.sha1,
+                    'about': user.about})
 
 
 @app.route('/snail/api/v0.1/users', methods=['POST'])
@@ -204,11 +206,12 @@ def create_user():
     password = request.json.get('password')
     type = request.json.get('type')
     sha1 = request.json.get('sha1')
+    about = request.json.get('about')
     if username is None or password is None:
         abort(400)
     if User.query.filter_by(username=username).first() is not None:  # exsiting user
         abort(400)
-    user = User(username=username, nickname=nickname, type=type, sha1=sha1)
+    user = User(username=username, nickname=nickname, type=type, sha1=sha1, about=about)
     user.hash_password(password)
     db.session.add(user)
     db.session.commit()
@@ -217,38 +220,9 @@ def create_user():
                     'username': user.username,
                     'nickname': user.nickname,
                     'type': user.type,
-                    'sha1': user.sha1}), 201
+                    'sha1': user.sha1,
+                    'about': user.about}), 201
     # {'Location': url_for('get_user', id = user.id, _external = True)}
-
-
-# @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['PUT'])
-# @auth.login_required
-# def update_user(user_id):
-# user = User.query.get(user_id)
-# if not user:
-# abort(404)
-# if not request.json:
-#         abort(400)
-#     if 'username' in request.json and type(request.json['namename']) != unicode:
-#         abort(400)
-#     if 'password' in request.json and type(request.json['password']) != unicode:
-#         abort(400)
-#     if 'type' in request.json and type(request.json['type']) != unicode:
-#         abort(400)
-#     user[0]['username'] = request.json.get('username', user[0]['username'])
-#     user[0]['password'] = request.json.get('password', user[0]['password'])
-#     user[0]['type'] = request.json.get('type', user[0]['type'])
-#     return jsonify({'username': user[0]})
-
-# @app.route('/snail/api/v0.1/users/<int:user_id>', methods=['DELETE'])
-# @auth.login_required
-# def delete_user(user_id):
-#     if User.query.filter_by(id=user_id).first() is None:
-#         abort(404)
-#     user = User(id=user_id)
-#     db.session.remove(user)
-#     db.session.commit()
-#     return jsonify({'result': True})
 
 
 @app.route('/snail/api/v0.1/token')
@@ -325,9 +299,9 @@ def get_queses():
     return jsonify({'queses': queses})
 
 
-@app.route('/snail/api/v0.1/quesesofcomp', methods=['POST'])
+@app.route('/snail/api/v0.1/quesesofcomp_new', methods=['POST'])
 @auth.login_required
-def get_comp_queses():
+def get_comp_queses_new():
     comp_id = request.json.get('comp_id')
     queses_num = Ques.query.filter_by(comp_id=comp_id).count()
     queses = []
@@ -356,8 +330,41 @@ def get_comp_queses():
             'content': ques.content
         }
         queses.append(ques_item)
-    return jsonify({'queses': queses})
-    # return jsonify({'num': queses_num})
+    return jsonify({'queses': sorted(queses, key=lambda x: x['id'], reverse=True)})
+
+
+@app.route('/snail/api/v0.1/quesesofcomp_hot', methods=['POST'])
+@auth.login_required
+def get_comp_queses_hot():
+    comp_id = request.json.get('comp_id')
+    queses_num = Ques.query.filter_by(comp_id=comp_id).count()
+    queses = []
+    if queses_num == 0:
+        abort(404)
+    quesfilter = Ques.query.filter_by(comp_id=comp_id)
+
+    for ques in quesfilter:
+        user = User.query.get(ques.user_id)
+        comp = Comp.query.get(ques.comp_id)
+        answer_num = Answer.query.filter_by(ques_id=ques.id).count()
+        ques_item = {
+            'id': ques.id,
+            'comp_id': ques.comp_id,
+            'comp_name': comp.name,
+            'comp_type': comp.comp_type,
+            'user_id': ques.user_id,
+            'user_name': user.username,
+            'user_nickname': user.nickname,
+            'user_pic': user.sha1,
+            'user_type': user.type,
+            'time': int(ques.time.strftime("%s")) * 1000,
+            'number': answer_num,
+            'title': ques.title,
+            'sha1': ques.sha1,
+            'content': ques.content
+        }
+        queses.append(ques_item)
+    return jsonify({'queses': sorted(queses, key=lambda x: x['number'])})
 
 
 @app.route('/snail/api/v0.1/queses', methods=['POST'])
