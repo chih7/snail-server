@@ -19,8 +19,8 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |获取图片
 GET         |http://api.chih.me/snail/api/v0.1/queses             |检索所有问题
 GET         |http://api.chih.me/snail/api/v0.1/queses/[id]        |检索单个问题
 POST        |http://api.chih.me/snail/api/v0.1/queses             |上传问题
-POST        |http://api.chih.me/snail/snail/api/v0.1/quesesofcomp_new |检索公司下的问题（时间）
-POST        |http://api.chih.me/snail/snail/api/v0.1/quesesofcomp_hot |检索公司下的问题（问题数）
+POST        |http://api.chih.me/snail/api/v0.1/quesesofcomp_new |检索公司下的问题（时间）
+POST        |http://api.chih.me/snail/api/v0.1/quesesofcomp_hot |检索公司下的问题（问题数）
 GET         |http://api.chih.me/snail/api/v0.1/comps              |检索所有公司 
 GET         |http://api.chih.me/snail/api/v0.1/comps/[id]         |检索单个公司 
 POST        |http://api.chih.me/snail/api/v0.1/comps              |上传公司
@@ -29,12 +29,12 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |查看图片
 GET         |http://api.chih.me/snail/api/v0.1/answers            |检索所有答案
 GET         |http://api.chih.me/snail/api/v0.1/answers/[id]       |检索单个答案
 POST        |http://api.chih.me/snail/api/v0.1/answers            |上传答案
-POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques_new|检索问题下的答案(时间)
-POST        |http://api.chih.me/snail/snail/api/v0.1/answersofques_hot|检索问题下的答案（点赞）
+POST        |http://api.chih.me/snail/api/v0.1/answersofques_new|检索问题下的答案(时间)
+POST        |http://api.chih.me/snail/api/v0.1/answersofques_hot|检索问题下的答案（点赞）
 GET         |http://api.chih.me/snail/api/v0.1/practices          |检索所有实习
 GET         |http://api.chih.me/snail/api/v0.1/practice/[id]      |检索单个实习
 POST        |http://api.chih.me/snail/api/v0.1/practices          |上传实习
-POST        |http://api.chih.me/snail/snail/api/v0.1/practicesofcomp|检索公司下的实习
+POST        |http://api.chih.me/snail/api/v0.1/practicesofcomp|检索公司下的实习
 
 ##API调用说明
 
