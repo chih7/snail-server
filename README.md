@@ -62,10 +62,20 @@ POST        |http://api.chih.me/snail/api/v0.1/practicesofcomp|检索公司下�
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/users/username
 
+###更新用户信息
+
+    $ curl -u miguel:python -i -X PUT -H "Content-Type: application/json" -d '{"username":"test","nickname":"查尔斯","password":"python","sha1":"xxxxxxxxxxxxx","type":"student", "about":"who am I"}' http://api.chih.me/snail/api/v0.1/users
+
+JSON为新的用户信息，username与原用户相同。
+
+###删除用户
+
+    $ curl -u curl -u miguel:python -i -X DELETE -H "Content-Type: application/json" -d '{"username":"test"}' http://api.chih.me/snail/api/v0.1/users
+
 ###密码认证
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/ok
-    
+
 指定用户、密码，验证通过则返回`{'isok': 'ok!'}`
 
 ###token认证

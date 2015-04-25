@@ -31,9 +31,7 @@ app.config['SECRET_KEY'] = 'watchaaaaaadog'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.wsgi_app = ProxyFix(app.wsgi_app)
-# text_factory = str
-# reload(sys)
-# sys.setdefaultencoding('utf8')
+
 
 # extensions
 auth = HTTPBasicAuth()
@@ -164,12 +162,10 @@ def verify_password(username_or_token, password):
 @app.route('/snail/api/v0.1/users', methods=['GET'])
 @auth.login_required
 def get_users():
-    users_num = User.query.count()
     users = []
-    if users_num == 0:
-        abort(404)
-    for user_id in range(1, users_num + 1):
-        user = User.query.get(user_id)
+    db_users = User.query.all()
+
+    for user in db_users:
 
         user_item = {
             'id': user.id,
@@ -199,7 +195,7 @@ def get_user(username):
 
 
 @app.route('/snail/api/v0.1/users', methods=['POST'])
-# @auth.login_required
+#@auth.login_required
 def create_user():
     username = request.json.get('username')
     nickname = request.json.get('nickname')
@@ -210,7 +206,7 @@ def create_user():
     if username is None or password is None:
         abort(400)
     if User.query.filter_by(username=username).first() is not None:  # exsiting user
-        abort(400)
+        return jsonify({'error': 'exsiting user'}), 400
     user = User(username=username, nickname=nickname, type=type, sha1=sha1, about=about)
     user.hash_password(password)
     db.session.add(user)
@@ -224,6 +220,58 @@ def create_user():
                     'about': user.about}), 201
     # {'Location': url_for('get_user', id = user.id, _external = True)}
 
+@app.route('/snail/api/v0.1/users', methods=['PUT'])
+@auth.login_required
+def update_user():
+    if not request.json:
+        abort(400)
+    username = request.json.get('username')
+    nickname = request.json.get('nickname')
+    password = request.json.get('password')
+    type = request.json.get('type')
+    sha1 = request.json.get('sha1')
+    about = request.json.get('about')
+    if username is None or password is None:
+        abort(400)
+    if User.query.filter_by(username=username).first() is None:  # not exsiting user
+        abort(400)
+    user = User.query.filter_by(username=username).first()
+    user.nickname = nickname
+    user.password_hash = pwd_context.encrypt(password)
+    user.type = type
+    user.sha1 = sha1
+    user.about = about
+
+    db.session.commit()
+    # return jsonify({'username': map(make_public_user, user)}), 201
+    return jsonify({'id': user.id,
+                    'username': user.username,
+                    'nickname': user.nickname,
+                    'type': user.type,
+                    'sha1': user.sha1,
+                    'about': user.about}), 201
+    # {'Location': url_for('get_user', id = user.id, _external = True)}
+
+@app.route('/snail/api/v0.1/users', methods=['DELETE'])
+@auth.login_required
+def delete_user():
+    if not request.json:
+        abort(400)
+    username = request.json.get('username')
+    if username is None:
+        abort(400)
+    if User.query.filter_by(username=username).first() is None:
+        abort(400)
+    user = User.query.filter_by(username=username).first()
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'id': user.id,
+                    'username': user.username,
+                    'nickname': user.nickname,
+                    'type': user.type,
+                    'sha1': user.sha1,
+                    'about': user.about,
+                    'delete': 'OK'}), 202
 
 @app.route('/snail/api/v0.1/token')
 @auth.login_required
