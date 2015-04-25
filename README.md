@@ -19,22 +19,30 @@ GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |获取图片
 GET         |http://api.chih.me/snail/api/v0.1/queses             |检索所有问题
 GET         |http://api.chih.me/snail/api/v0.1/queses/[id]        |检索单个问题
 POST        |http://api.chih.me/snail/api/v0.1/queses             |上传问题
-POST        |http://api.chih.me/snail/api/v0.1/quesesofcomp_new |检索公司下的问题（时间）
-POST        |http://api.chih.me/snail/api/v0.1/quesesofcomp_hot |检索公司下的问题（问题数）
+POST        |http://api.chih.me/snail/api/v0.1/quesesofcomp_new   |检索公司下的问题（时间）
+POST        |http://api.chih.me/snail/api/v0.1/quesesofcomp_hot   |检索公司下的问题（问题数）
+PUT         |http://api.chih.me/snail/api/v0.1/queses             |修改问题
+DELETE      |http://api.chih.me/snail/api/v0.1/queses             |删除问题
 GET         |http://api.chih.me/snail/api/v0.1/comps              |检索所有公司 
 GET         |http://api.chih.me/snail/api/v0.1/comps/[id]         |检索单个公司 
 POST        |http://api.chih.me/snail/api/v0.1/comps              |上传公司
+PUT         |http://api.chih.me/snail/api/v0.1/comps              |修改公司
+DELETE      |http://api.chih.me/snail/api/v0.1/comps              |删除公司
 POST        |http://api.chih.me/snail/api/v0.1/upload             |上传图片
 GET         |http://api.chih.me/snail/api/v0.1/pic/[sha1]         |查看图片
 GET         |http://api.chih.me/snail/api/v0.1/answers            |检索所有答案
 GET         |http://api.chih.me/snail/api/v0.1/answers/[id]       |检索单个答案
 POST        |http://api.chih.me/snail/api/v0.1/answers            |上传答案
-POST        |http://api.chih.me/snail/api/v0.1/answersofques_new|检索问题下的答案(时间)
-POST        |http://api.chih.me/snail/api/v0.1/answersofques_hot|检索问题下的答案（点赞）
+PUT         |http://api.chih.me/snail/api/v0.1/answers            |修改答案
+DELETE      |http://api.chih.me/snail/api/v0.1/answers            |删除答案
+POST        |http://api.chih.me/snail/api/v0.1/answersofques_new  |检索问题下的答案（时间）
+POST        |http://api.chih.me/snail/api/v0.1/answersofques_hot  |检索问题下的答案（点赞）
 GET         |http://api.chih.me/snail/api/v0.1/practices          |检索所有实习
 GET         |http://api.chih.me/snail/api/v0.1/practice/[id]      |检索单个实习
 POST        |http://api.chih.me/snail/api/v0.1/practices          |上传实习
-POST        |http://api.chih.me/snail/api/v0.1/practicesofcomp|检索公司下的实习
+PUT         |http://api.chih.me/snail/api/v0.1/practices          |修改实习
+DELETE      |http://api.chih.me/snail/api/v0.1/practices          |删除实习
+POST        |http://api.chih.me/snail/api/v0.1/practicesofcomp    |检索公司下的实习
 
 ##API调用说明
 
@@ -109,6 +117,18 @@ JSON为新的用户信息，username与原用户相同。
 ###检索公司下的问题
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1"}' http://api.chih.me/snail/api/v0.1/quesesofcomp_[hot|new]
+    
+###修改问题
+
+        $ curl -u miguel:python -i -X PUT -H "Content-Type: application/json" -d '{"ques_id":"1","comp_id":"1","user_id":"1","sha1":"xxxxxxxxxxxxx","title":"test","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/queses
+
+ques_id为需修改的问题id
+
+###删除问题
+
+    $ curl -u miguel:python -i -X DELETE -H "Content-Type: application/json" -d '{"ques_id":"1"}' http://api.chih.me/snail/api/v0.1/queses
+
+ques_id为需修改的问题id
 
 答案
 ---
@@ -132,6 +152,18 @@ ques_id,user_id必须已经存在
 ###检索问题下的答案
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"ques_id":"1"}' http://api.chih.me/snail/api/v0.1/answersofques_[hot|new]
+    
+###修改答案
+
+    $ curl -u miguel:python -i -X PUT -H "Content-Type: application/json" -d '{"answer_id":"1","ques_id":"5","user_id":"4","number":"3","sha1":"xxxxxxxxxxxxx","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/answers
+
+answer_id为需修改的答案id
+
+###删除答案
+
+    $ curl -u miguel:python -i -X DELETE -H "Content-Type: application/json" -d '{"answer_id":"1"}' http://api.chih.me/snail/api/v0.1/answers
+
+answer_id为需修改的答案id
 
 公司
 ---
@@ -149,6 +181,18 @@ ques_id,user_id必须已经存在
 ###获取单个公司信息
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/comps/1
+    
+###修改公司信息
+
+    $ curl -u miguel:python -i -X PUT -H "Content-Type: application/json" -d '{"comp_id":"7","type":"计算机","name":"阿里巴巴"}' http://api.chih.me/snail/api/v0.1/comps
+
+comp_id为需修改的公司id 
+
+###删除公司信息
+
+        $ curl -u miguel:python -i -X DELETE -H "Content-Type: application/json" -d '{"comp_id":"7"}' http://api.chih.me/snail/api/v0.1/comps
+
+comp_id为需修改的公司id
 
 实习
 ---
@@ -172,6 +216,18 @@ comp_id必须已经存在
 ###检索公司下的实习
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1"}' http://api.chih.me/snail/api/v0.1/practicesofcomp
+    
+###修改实习
+
+        $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"practice_id":"1","title":"title","office":"职位","type":"type","comp_id":"comp_id","comp_size":"comp_size","addr":"addr","money":"money","ask":"要求","duty":"职责"}' http://api.chih.me/snail/api/v0.1/practices
+
+practice_id为需修改的实习信息id
+
+###删除实习
+
+        $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"practice_id":"1"}' http://api.chih.me/snail/api/v0.1/practices
+
+practice_id为需修改的实习信息id
 
 图片
 ---

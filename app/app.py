@@ -234,7 +234,7 @@ def update_user():
     if username is None or password is None:
         abort(400)
     if User.query.filter_by(username=username).first() is None:  # not exsiting user
-        abort(400)
+        abort(404)
     user = User.query.filter_by(username=username).first()
     user.nickname = nickname
     user.password_hash = pwd_context.encrypt(password)
@@ -249,7 +249,7 @@ def update_user():
                     'nickname': user.nickname,
                     'type': user.type,
                     'sha1': user.sha1,
-                    'about': user.about}), 201
+                    'about': user.about}), 202
     # {'Location': url_for('get_user', id = user.id, _external = True)}
 
 @app.route('/snail/api/v0.1/users', methods=['DELETE'])
@@ -261,7 +261,7 @@ def delete_user():
     if username is None:
         abort(400)
     if User.query.filter_by(username=username).first() is None:
-        abort(400)
+        abort(404)
     user = User.query.filter_by(username=username).first()
     db.session.delete(user)
     db.session.commit()
@@ -318,15 +318,13 @@ def get_ques(ques_id):
 @app.route('/snail/api/v0.1/queses', methods=['GET'])
 @auth.login_required
 def get_queses():
-    queses_num = Ques.query.count()
     queses = []
-    if queses_num == 0:
-        abort(404)
-    for ques_id in range(1, queses_num + 1):
-        ques = Ques.query.get(ques_id)
+    db_queses = Ques.query.all()
+
+    for ques in db_queses:
         user = User.query.get(ques.user_id)
         comp = Comp.query.get(ques.comp_id)
-        answer_num = Answer.query.filter_by(ques_id=ques_id).count()
+        answer_num = Answer.query.filter_by(ques_id=ques.id).count()
         ques_item = {
             'id': ques.id,
             'comp_id': ques.comp_id,
@@ -351,10 +349,7 @@ def get_queses():
 @auth.login_required
 def get_comp_queses_new():
     comp_id = request.json.get('comp_id')
-    queses_num = Ques.query.filter_by(comp_id=comp_id).count()
     queses = []
-    if queses_num == 0:
-        abort(404)
     quesfilter = Ques.query.filter_by(comp_id=comp_id)
 
     for ques in quesfilter:
@@ -385,10 +380,7 @@ def get_comp_queses_new():
 @auth.login_required
 def get_comp_queses_hot():
     comp_id = request.json.get('comp_id')
-    queses_num = Ques.query.filter_by(comp_id=comp_id).count()
     queses = []
-    if queses_num == 0:
-        abort(404)
     quesfilter = Ques.query.filter_by(comp_id=comp_id)
 
     for ques in quesfilter:
@@ -457,6 +449,79 @@ def create_ques():
                     'sha1': ques.sha1,
                     'content': ques.content})
 
+@app.route('/snail/api/v0.1/queses', methods=['PUT'])
+@auth.login_required
+def update_ques():
+    if not request.json:
+        abort(400)
+    ques_id = request.json.get('ques_id')
+    comp_id = request.json.get('comp_id')
+    user_id = request.json.get('user_id')
+    title = request.json.get('title')
+    sha1 = request.json.get('sha1')
+    content = request.json.get('content')
+    if ques_id is None:
+        abort(400)
+    if Ques.query.get(ques_id) is None:
+        abort(404)
+
+    ques = Ques.query.get(ques_id)
+    ques.comp_id = comp_id
+    ques.user_id = user_id
+    ques.title = title
+    ques.sha1 = sha1
+    ques.content = content
+
+    db.session.commit()
+    user = User.query.get(ques.user_id)
+    comp = Comp.query.get(ques.comp_id)
+    answer_num = Answer.query.filter_by(ques_id=ques.id).count()
+    return jsonify({'id': ques.id,
+                    'comp_id': ques.comp_id,
+                    'comp_name': comp.name,
+                    'comp_type': comp.comp_type,
+                    'user_id': ques.user_id,
+                    'user_name': user.username,
+                    'user_nickname': user.nickname,
+                    'user_pic': user.sha1,
+                    'user_type': user.type,
+                    'time': int(ques.time.strftime("%s")) * 1000,
+                    'number': answer_num,
+                    'title': ques.title,
+                    'sha1': ques.sha1,
+                    'content': ques.content}), 202
+
+@app.route('/snail/api/v0.1/queses', methods=['DELETE'])
+@auth.login_required
+def delete_ques():
+    if not request.json:
+        abort(400)
+    ques_id = request.json.get('ques_id')
+    if ques_id is None:
+        abort(400)
+    if Ques.query.get(ques_id) is None:
+        abort(404)
+    ques = Ques.query.get(ques_id)
+    db.session.delete(ques)
+    db.session.commit()
+    user = User.query.get(ques.user_id)
+    comp = Comp.query.get(ques.comp_id)
+    answer_num = Answer.query.filter_by(ques_id=ques.id).count()
+    return jsonify({'id': ques.id,
+                    'comp_id': ques.comp_id,
+                    'comp_name': comp.name,
+                    'comp_type': comp.comp_type,
+                    'user_id': ques.user_id,
+                    'user_name': user.username,
+                    'user_nickname': user.nickname,
+                    'user_pic': user.sha1,
+                    'user_type': user.type,
+                    'time': int(ques.time.strftime("%s")) * 1000,
+                    'number': answer_num,
+                    'title': ques.title,
+                    'sha1': ques.sha1,
+                    'content': ques.content,
+                    'delete': 'OK'}), 202
 
 #=======================================================================================
 #answer
@@ -492,12 +557,9 @@ def get_answer(answer_id):
 @app.route('/snail/api/v0.1/answers', methods=['GET'])
 @auth.login_required
 def get_answers():
-    answers_num = Answer.query.count()
+    db_answers = Answer.query.all()
     answers = []
-    if answers_num == 0:
-        abort(404)
-    for answer_id in range(1, answers_num + 1):
-        answer = Answer.query.get(answer_id)
+    for answer in db_answers:
         user = User.query.get(answer.user_id)
         ques = Ques.query.get(answer.ques_id)
         answer_item = {
@@ -527,10 +589,7 @@ def get_answers():
 @auth.login_required
 def get_ques_answers_new():
     ques_id = request.json.get('ques_id')
-    answers_num = Answer.query.filter_by(ques_id=ques_id).count()
     answers = []
-    if answers_num == 0:
-        return jsonify({'answers': 'null'})
     answersfilter = Answer.query.filter_by(ques_id=ques_id)
     for answer in answersfilter:
         user = User.query.get(answer.user_id)
@@ -562,10 +621,7 @@ def get_ques_answers_new():
 @auth.login_required
 def get_ques_answers_hot():
     ques_id = request.json.get('ques_id')
-    answers_num = Answer.query.filter_by(ques_id=ques_id).count()
     answers = []
-    if answers_num == 0:
-        return jsonify({'answers': 'null'})
     answersfilter = Answer.query.filter_by(ques_id=ques_id)
     for answer in answersfilter:
         user = User.query.get(answer.user_id)
@@ -634,6 +690,83 @@ def create_answer():
                     'sha1': answer.sha1,
                     'content': answer.content})
 
+@app.route('/snail/api/v0.1/answers', methods=['PUT'])
+@auth.login_required
+def update_answer():
+    if not request.json:
+        abort(400)
+    answer_id = request.json.get('answer_id')
+    ques_id = request.json.get('ques_id')
+    user_id = request.json.get('user_id')
+    number = request.json.get('number')
+    content = request.json.get('content')
+    sha1 = request.json.get('sha1')
+    if answer_id is None:
+        abort(400)
+    if Answer.query.get(answer_id) is None:
+        abort(404)
+    answer = Answer.query.get(answer_id)
+    answer.ques_id = ques_id
+    answer.user_id = user_id
+    answer.number = number
+    answer.content = content
+    answer.sha1 = sha1
+    db.session.commit()
+    user = User.query.get(answer.user_id)
+    ques = Ques.query.get(answer.ques_id)
+    return jsonify({'id': answer.id,
+                    'ques_id': answer.ques_id,
+                    'ques_type': ques.type,
+                    'ques_comp_id': ques.comp_id,
+                    'ques_number': ques.number,
+                    'ques_title': ques.title,
+                    'ques_time': ques.time,
+                    'ques_user_id': ques.user_id,
+                    'user_id': answer.user_id,
+                    'user_name': user.username,
+                    'user_nickname': user.nickname,
+                    'user_pic': user.sha1,
+                    'user_type': user.type,
+                    'time': int(answer.time.strftime("%s")) * 1000,
+                    'number': answer.number,
+                    'sha1': answer.sha1,
+                    'content': answer.content}), 202
+
+
+@app.route('/snail/api/v0.1/answers', methods=['DELETE'])
+@auth.login_required
+def delete_answer():
+    if not request.json:
+        abort(400)
+    answer_id = request.json.get('answer_id')
+    if answer_id is None:
+        abort(400)
+    if Answer.query.get(answer_id) is None:
+        abort(404)
+    answer = Answer.query.get(answer_id)
+    db.session.delete(answer)
+    db.session.commit()
+    user = User.query.get(answer.user_id)
+    ques = Ques.query.get(answer.ques_id)
+    return jsonify({'id': answer.id,
+                    'ques_id': answer.ques_id,
+                    'ques_type': ques.type,
+                    'ques_comp_id': ques.comp_id,
+                    'ques_number': ques.number,
+                    'ques_title': ques.title,
+                    'ques_time': ques.time,
+                    'ques_user_id': ques.user_id,
+                    'user_id': answer.user_id,
+                    'user_name': user.username,
+                    'user_nickname': user.nickname,
+                    'user_pic': user.sha1,
+                    'user_type': user.type,
+                    'time': int(answer.time.strftime("%s")) * 1000,
+                    'number': answer.number,
+                    'sha1': answer.sha1,
+                    'content': answer.content,
+                    'delete': 'OK'}), 202
+
 
 #=========================================================================================================
 #comp
@@ -651,13 +784,9 @@ def get_comp(comp_id):
 @app.route('/snail/api/v0.1/comps', methods=['GET'])
 @auth.login_required
 def get_comps():
-    comps_num = Comp.query.count()
+    db_comps = Comp.query.all()
     comps = []
-    if comps_num == 0:
-        abort(404)
-    for comp_id in range(1, comps_num + 1):
-        comp = Comp.query.get(comp_id)
-
+    for comp in db_comps:
         comp_item = {
             'id': comp.id,
             'type': comp.comp_type,
@@ -678,6 +807,38 @@ def create_comps():
     db.session.add(comp)
     db.session.commit()
     return jsonify({'id': comp.id, 'type': comp.comp_type, 'name': comp.name}), 201
+
+@app.route('/snail/api/v0.1/comps', methods=['PUT'])
+@auth.login_required
+def update_comp():
+    if not request.json:
+        abort(400)
+    comp_id = request.json.get('comp_id')
+    comp_type = request.json.get('type')
+    name = request.json.get('name')
+    if comp_id is None:
+        abort(400)
+    if Comp.query.get(comp_id) is None:
+        abort(400)
+    comp = Comp.query.get(comp_id)
+    comp.comp_type = comp_type
+    comp.name = name
+    db.session.commit()
+    return jsonify({'id': comp.id, 'type': comp.comp_type, 'name': comp.name}), 202
+
+@app.route('/snail/api/v0.1/comps', methods=['DELETE'])
+@auth.login_required
+def delete_comp():
+    if not request.json:
+        abort(400)
+    comp_id = request.json.get('comp_id')
+    if comp_id is None:
+        abort(400)
+    if Comp.query.get(comp_id) is None:
+        abort(404)
+    comp = Comp.query.get(comp_id)
+    db.session.delete(comp)
+    return jsonify({'id': comp.id, 'type': comp.comp_type, 'name': comp.name, 'delete': 'OK'}), 202
 
 
 #=======================================================================================
@@ -709,12 +870,10 @@ def get_practice(practice_id):
 @app.route('/snail/api/v0.1/practices', methods=['GET'])
 @auth.login_required
 def get_practices():
-    practices_num = Practice.query.count()
+    db_practices = Practice.query.all()
     practices = []
-    if practices_num == 0:
-        abort(404)
-    for practice_id in range(1, practices_num + 1):
-        practice = Practice.query.get(practice_id)
+
+    for practice in db_practices:
         comp = Comp.query.get(practice.comp_id)
         practice_item = {
             'id': practice.id,
@@ -739,10 +898,7 @@ def get_practices():
 @auth.login_required
 def get_ques_practices():
     comp_id = request.json.get('comp_id')
-    practices_num = Practice.query.filter_by(comp_id=comp_id).count()
     practices = []
-    if practices_num == 0:
-        abort(404)
     practicesfilter = Practice.query.filter_by(comp_id=comp_id)
     for practice in practicesfilter:
         comp = Comp.query.get(practice.comp_id)
@@ -808,6 +964,80 @@ def create_practice():
                     'money': practice.money,
                     'ask': practice.ask,
                     'duty': practice.duty})
+
+@app.route('/snail/api/v0.1/practices', methods=['PUT'])
+@auth.login_required
+def update_practice():
+    if not request.json:
+        abort(400)
+    practice_id = request.json.get('practice_id')
+    title = request.json.get('title')
+    office = request.json.get('office')
+    type = request.json.get('type')
+    comp_id = request.json.get('comp_id')
+    comp_size = request.json.get('comp_size')
+    addr = request.json.get('addr')
+    ask = request.json.get('ask')
+    money = request.json.get('money')
+    duty = request.json.get('duty')
+    if practice_id is None:
+        abort(400)
+    if Practice.query.get(practice_id) is None:
+        abort(404)
+    practice = Practice.query.get(practice_id)
+    practice.title = title
+    practice.office = office
+    practice.type = type
+    practice.comp_id = comp_id
+    practice.comp_size =comp_size
+    practice.addr = addr
+    practice.ask = ask
+    practice.money = money
+    practice.duty =duty
+    db.session.commit()
+    comp = Comp.query.get(practice.comp_id)
+    return jsonify({'id': practice.id,
+                    'title': practice.title,
+                    'office': practice.office,
+                    'time': int(practice.time.strftime("%s")) * 1000,
+                    'type': practice.type,
+                    'comp_id': practice.comp_id,
+                    'comp_size': practice.comp_size,
+                    'comp_name': comp.name,
+                    'comp_type': comp.comp_type,
+                    'addr': practice.addr,
+                    'money': practice.money,
+                    'ask': practice.ask,
+                    'duty': practice.duty}), 202
+
+@app.route('/snail/api/v0.1/practices', methods=['DELETE'])
+@auth.login_required
+def delete_practice():
+    if not request.json:
+        abort(400)
+    practice_id = request.json.get('practice_id')
+    if practice_id is None:
+        abort(400)
+    if Practice.query.get(practice_id) is None:
+        abort(404)
+    practice = Practice.query.get(practice_id)
+    db.session.delete(practice)
+    db.session.commit()
+    comp = Comp.query.get(practice.comp_id)
+    return jsonify({'id': practice.id,
+                    'title': practice.title,
+                    'office': practice.office,
+                    'time': int(practice.time.strftime("%s")) * 1000,
+                    'type': practice.type,
+                    'comp_id': practice.comp_id,
+                    'comp_size': practice.comp_size,
+                    'comp_name': comp.name,
+                    'comp_type': comp.comp_type,
+                    'addr': practice.addr,
+                    'money': practice.money,
+                    'ask': practice.ask,
+                    'duty': practice.duty,
+                    'delete': 'OK'}), 202
 
 
 #============================================================================================
