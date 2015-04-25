@@ -190,7 +190,7 @@ comp_id为需修改的公司id
 
 ###删除公司信息
 
-        $ curl -u miguel:python -i -X DELETE -H "Content-Type: application/json" -d '{"comp_id":"7"}' http://api.chih.me/snail/api/v0.1/comps
+    $ curl -u miguel:python -i -X DELETE -H "Content-Type: application/json" -d '{"comp_id":"7"}' http://api.chih.me/snail/api/v0.1/comps
 
 comp_id为需修改的公司id
 
@@ -219,13 +219,13 @@ comp_id必须已经存在
     
 ###修改实习
 
-        $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"practice_id":"1","title":"title","office":"职位","type":"type","comp_id":"comp_id","comp_size":"comp_size","addr":"addr","money":"money","ask":"要求","duty":"职责"}' http://api.chih.me/snail/api/v0.1/practices
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"practice_id":"1","title":"title","office":"职位","type":"type","comp_id":"comp_id","comp_size":"comp_size","addr":"addr","money":"money","ask":"要求","duty":"职责"}' http://api.chih.me/snail/api/v0.1/practices
 
 practice_id为需修改的实习信息id
 
 ###删除实习
 
-        $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"practice_id":"1"}' http://api.chih.me/snail/api/v0.1/practices
+    $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"practice_id":"1"}' http://api.chih.me/snail/api/v0.1/practices
 
 practice_id为需修改的实习信息id
 
@@ -236,8 +236,8 @@ practice_id为需修改的实习信息id
 
 表单 
     
-        <form action='/snail/api/v0.1/upload' method='post' enctype='multipart/form-data'>
-            <input type='file' name='uploaded_file'>
+    <form action='/snail/api/v0.1/upload' method='post' enctype='multipart/form-data'>
+    <input type='file' name='uploaded_file'>
 
 返回图片sha1 
   
