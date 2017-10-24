@@ -1,8 +1,8 @@
-#snail的服务端
+# snail的服务端
 
 ---
 
-##overview
+## overview
 
 使用`Pyhon`、`Flask`框架，实现`RESTful api`服务器端。
 
@@ -44,7 +44,7 @@ PUT         |http://api.chih.me/snail/api/v0.1/practices          |修改实习
 DELETE      |http://api.chih.me/snail/api/v0.1/practices          |删除实习
 POST        |http://api.chih.me/snail/api/v0.1/practicesofcomp    |检索公司下的实习
 
-##API调用说明
+## API调用说明
 
 服务端已经部署，地址为 
     
@@ -54,7 +54,7 @@ POST        |http://api.chih.me/snail/api/v0.1/practicesofcomp    |检索公司�
 用户与认证    
 ---
 
-###用户注册
+### 用户注册
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"username":"test","nickname":"查尔斯","password":"python","sha1":"xxxxxxxxxxxxx","type":"student", "about":"who am I"}' http://api.chih.me/snail/api/v0.1/users
     
@@ -62,31 +62,31 @@ POST        |http://api.chih.me/snail/api/v0.1/practicesofcomp    |检索公司�
 
 成功返回json格式用户名，错误返回处理后json格式的400 `{'error': 'Bad Request'}`
 
-###获取所有用户信息
+### 获取所有用户信息
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/users
 
-###获取单个用户信息
+### 获取单个用户信息
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/users/username
 
-###更新用户信息
+### 更新用户信息
 
     $ curl -u miguel:python -i -X PUT -H "Content-Type: application/json" -d '{"username":"test","nickname":"查尔斯","password":"python","sha1":"xxxxxxxxxxxxx","type":"student", "about":"who am I"}' http://api.chih.me/snail/api/v0.1/users
 
 JSON为新的用户信息，username与原用户相同。
 
-###删除用户
+### 删除用户
 
     $ curl -u curl -u miguel:python -i -X DELETE -H "Content-Type: application/json" -d '{"username":"test"}' http://api.chih.me/snail/api/v0.1/users
 
-###密码认证
+### 密码认证
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/ok
 
 指定用户、密码，验证通过则返回`{'isok': 'ok!'}`
 
-###token认证
+### token认证
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/token
     
@@ -99,32 +99,32 @@ JSON为新的用户信息，username与原用户相同。
 问题
 ---
 
-###问题上传
+### 问题上传
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1","user_id":"1","sha1":"xxxxxxxxxxxxx","title":"test","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/queses
 注意：问题类型为`已存在`的公司类型
 
-###获取所有问题信息
+### 获取所有问题信息
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/queses
 
 
-###获取单个问题信息
+### 获取单个问题信息
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/queses/1
     
     
-###检索公司下的问题
+### 检索公司下的问题
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1"}' http://api.chih.me/snail/api/v0.1/quesesofcomp_[hot|new]
     
-###修改问题
+### 修改问题
 
         $ curl -u miguel:python -i -X PUT -H "Content-Type: application/json" -d '{"ques_id":"1","comp_id":"1","user_id":"1","sha1":"xxxxxxxxxxxxx","title":"test","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/queses
 
 ques_id为需修改的问题id
 
-###删除问题
+### 删除问题
 
     $ curl -u miguel:python -i -X DELETE -H "Content-Type: application/json" -d '{"ques_id":"1"}' http://api.chih.me/snail/api/v0.1/queses
 
@@ -133,33 +133,33 @@ ques_id为需修改的问题id
 答案
 ---
 
-###检索所有答案
+### 检索所有答案
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/answers
 
 
-###检索单个答案
+### 检索单个答案
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/answer/1
 
 
-###上传答案
+### 上传答案
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"ques_id":"5","user_id":"4","number":"3","sha1":"xxxxxxxxxxxxx","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/answers
 
 ques_id,user_id必须已经存在
 
-###检索问题下的答案
+### 检索问题下的答案
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"ques_id":"1"}' http://api.chih.me/snail/api/v0.1/answersofques_[hot|new]
     
-###修改答案
+### 修改答案
 
     $ curl -u miguel:python -i -X PUT -H "Content-Type: application/json" -d '{"answer_id":"1","ques_id":"5","user_id":"4","number":"3","sha1":"xxxxxxxxxxxxx","content":"gggggggggggggggggggggg"}' http://api.chih.me/snail/api/v0.1/answers
 
 answer_id为需修改的答案id
 
-###删除答案
+### 删除答案
 
     $ curl -u miguel:python -i -X DELETE -H "Content-Type: application/json" -d '{"answer_id":"1"}' http://api.chih.me/snail/api/v0.1/answers
 
@@ -168,27 +168,27 @@ answer_id为需修改的答案id
 公司
 ---
 
-###公司信息上传
+### 公司信息上传
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"type":"计算机","name":"阿里巴巴"}' http://api.chih.me/snail/api/v0.1/comps
 
 
-###获取所有公司信息
+### 获取所有公司信息
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/comps
 
 
-###获取单个公司信息
+### 获取单个公司信息
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/comps/1
     
-###修改公司信息
+### 修改公司信息
 
     $ curl -u miguel:python -i -X PUT -H "Content-Type: application/json" -d '{"comp_id":"7","type":"计算机","name":"阿里巴巴"}' http://api.chih.me/snail/api/v0.1/comps
 
 comp_id为需修改的公司id 
 
-###删除公司信息
+### 删除公司信息
 
     $ curl -u miguel:python -i -X DELETE -H "Content-Type: application/json" -d '{"comp_id":"7"}' http://api.chih.me/snail/api/v0.1/comps
 
@@ -197,33 +197,33 @@ comp_id为需修改的公司id
 实习
 ---
 
-###检索所有实习
+### 检索所有实习
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/practices
 
 
-###检索单个实习
+### 检索单个实习
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/practice/1
 
 
-###上传实习
+### 上传实习
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"title":"title","office":"职位","type":"type","comp_id":"comp_id","comp_size":"comp_size","addr":"addr","money":"money","ask":"要求","duty":"职责"}' http://api.chih.me/snail/api/v0.1/practices
 
 comp_id必须已经存在
 
-###检索公司下的实习
+### 检索公司下的实习
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"comp_id":"1"}' http://api.chih.me/snail/api/v0.1/practicesofcomp
     
-###修改实习
+### 修改实习
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"practice_id":"1","title":"title","office":"职位","type":"type","comp_id":"comp_id","comp_size":"comp_size","addr":"addr","money":"money","ask":"要求","duty":"职责"}' http://api.chih.me/snail/api/v0.1/practices
 
 practice_id为需修改的实习信息id
 
-###删除实习
+### 删除实习
 
     $ curl -u miguel:python -i -X POST -H "Content-Type: application/json" -d '{"practice_id":"1"}' http://api.chih.me/snail/api/v0.1/practices
 
@@ -232,7 +232,7 @@ practice_id为需修改的实习信息id
 图片
 ---
 
-###上传图片
+### 上传图片
 
 表单 
     
@@ -246,7 +246,7 @@ practice_id为需修改的实习信息id
     }
 
 
-###获取图片
+### 获取图片
 
 
     $ curl -u miguel:python -i -X GET http://api.chih.me/snail/api/v0.1/pic/sha1  
